@@ -53,6 +53,15 @@ sans fonction réservée aux contributeurs.
 Votre soutien concerne mon travail sur cette intégration,
 et non les données fournies par Météo-France.
 
+## 📥 Installation via HACS
+
+Cliquez sur le bouton ci-dessous pour ouvrir le dépôt dans HACS
+sur votre instance Home Assistant :
+
+[![Ouvrir le dépôt dans HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ClanCampel-SmartLab&repository=vigilance-meteo-mobile&category=integration)
+
+HACS doit être installé sur votre instance Home Assistant.
+
 
 ## 📱C'est parti !  Avant de commencer
 
