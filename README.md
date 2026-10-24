@@ -4,7 +4,7 @@
 
 <h1 align="center">Vigilance météo mobile</h1>
 <p align="center"><strong>Vos alertes météo vous accompagnent dans vos déplacements.</strong></p>
-<p align="center">Une intégration Home Assistant signée <strong>ClanCampel — SmartLab</strong> </p>
+<p align="center">Une intégration Home Assistant signée <strong>Clan'Campel-SmartLab</strong> </p>
 
 <p align="center">
   <a href="https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile/releases"><img src="https://img.shields.io/github/v/release/ClanCampel-SmartLab/vigilance-meteo-mobile?label=version" alt="Dernière version publiée"></a>
