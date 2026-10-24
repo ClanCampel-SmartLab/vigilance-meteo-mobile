@@ -1,34 +1,24 @@
-# Utilisation, boutons et réglages
+# Utilisation et réglages
 
-## Réglages avancés
-
-| Option | Défaut | Description |
+| Option | Défaut | Fonction |
 |---|---|---|
-| Actualisation | 30 minutes | 15 à 1440 ; respecter les quotas et le délai accepté. |
-| Niveau minimum automatique | Jaune | Vert, jaune, orange ou rouge. Test manuel indépendant du seuil. |
-| Départements exclus | Vide | Liste commune, facultative. Codes séparés par des virgules. |
-| Automatique | Désactivé | Activer volontairement après les tests ; peut envoyer un bulletin immédiatement. |
+| Actualisation | 30 min | De 15 à 1440 minutes, selon quotas et délai accepté. |
+| Seuil automatique | Jaune | Vert, jaune, orange ou rouge. |
+| Exclusions | Aucune | Liste facultative de codes séparés par des virgules, commune aux profils. |
+| Automatique | Désactivé | Activer après les essais ; peut provoquer un premier envoi immédiat. |
 
-Modifier depuis l'entrée → Configurer/Options. Ajouter/modifier/retirer un profil puis terminer le récapitulatif.
-Les options ne sont enregistrées qu'après sa validation. Le rechargement peut actualiser puis notifier si l'automatique est activé.
+Options : ajout, modification et retrait de profils, puis enregistrement au récapitulatif final.
+Un profil suit UNE position et notifie UNE OU PLUSIEURS destinations. Pour deux positions indépendantes, créer deux profils.
 
-## Position et destinations : deux notions
+## Boutons
 
-Un profil = UNE position suivie + UNE OU PLUSIEURS destinations recevant le même bulletin.
-Pour Papa et Maman en déplacements séparés : créer deux profils, une position personnelle pour chacun.
-Pour copier le bulletin de Papa sur les deux téléphones : choisir la position de Papa et cocher les deux actions dans son profil.
-Si une même destination figure dans plusieurs profils, elle peut recevoir plusieurs bulletins : c'est volontaire.
+- Fiche centrale : Actualiser le bulletin. Peut déclencher les règles automatiques si activées.
+- Fiche du profil : Envoyer une notification de test. Vise les destinations de ce profil seulement.
 
-## Fiches et boutons
+Les fiches sont virtuelles : elles ne correspondent pas à un nouvel appareil physique.
+L’état d’un bouton est son heure de dernière pression, pas une preuve de réception.
 
-Une fiche centrale Vigilance météo mobile contient Actualiser le bulletin.
-Chaque profil a une fiche virtuelle Vigilance météo — Nom : capteur et bouton Envoyer une notification de test.
-Ces fiches représentent l'intégration et ses profils, pas un nouvel appareil physique installé sur le téléphone.
-La page d'intégration n'est pas modifiée pour y injecter arbitrairement un gros bouton : ouvrir la fiche du profil et ses contrôles.
-Le bouton test envoie à toutes les destinations du profil, pas aux autres profils.
-Le bouton Actualiser peut déclencher les règles automatiques si elles sont activées.
-
-## Tests via actions, si souhaité
+## Actions
 
 Tous les profils :
 
@@ -37,12 +27,12 @@ action: vigilance_meteo_mobile.test
 data: {}
 ```
 
-Un profil : copier son attribut recipient_id depuis son capteur, puis :
+Un profil :
 
 ```yaml
 action: vigilance_meteo_mobile.test
 data:
-  recipient_id: IDENTIFIANT_DU_PROFIL
+  recipient_id: IDENTIFIANT_COPIE_DANS_LES_ATTRIBUTS_DU_CAPTEUR
 ```
 
 Actualiser :
@@ -52,47 +42,36 @@ action: vigilance_meteo_mobile.refresh
 data: {}
 ```
 
-Le test ignore seuil et désactivation automatique, mais respecte TOUJOURS position inconnue, exclusions, pays/zone non reconnus et validité du bulletin.
-Il ne modifie pas la mémoire des alertes automatiques. Il envoie un vrai message TEST et ne garantit ni livraison physique ni lecture.
-Le dernier test est conservé en mémoire dans les attributs last_test_status et last_test_time ; il peut disparaître au rechargement.
-L'état du bouton indique sa dernière pression, PAS une confirmation de livraison.
+Le test envoie un vrai message. Il ignore le seuil et la désactivation automatique, mais respecte les exclusions, la position inconnue et la validité des données.
+Il ne modifie pas la mémoire des alertes automatiques.
 
 ## Résultats
 
-L'action retourne éventuellement les résultats par profil et par destination.
-L'événement vigilance_meteo_mobile_result les expose aussi. Le capteur expose le dernier statut de test.
+Réponse d’action facultative et événement vigilance_meteo_mobile_result : résultats par profil et destination.
+Le capteur expose last_test_status et last_test_time, conservés en mémoire jusqu’au rechargement.
 
-- test_envoye / envoye : appels de notification acceptés.
+- test_envoye / envoye : appel de notification accepté, sans garantie de livraison ni lecture.
 - position_inconnue : entité absente, unknown ou unavailable.
 - departement_non_pris_en_charge : pays, attributs ou territoire non reconnus.
-- departement_exclu : exclusion choisie ; les données peuvent rester visibles dans la carte mais l'envoi est bloqué.
-- bulletin_perime / bulletin_invalide / departement_absent / api_indisponible : pas d'envoi à partir de données inutilisables.
-- sous_le_seuil / automatique_desactive / deja_envoye : règle automatique empêchant l'envoi.
-- resultat_partiel : destinations avec résultats différents ; consulter leur détail.
-- action_notification_absente / erreur_notification : action introuvable ou erreur pendant l'appel.
+- departement_exclu : données éventuellement visibles, notification bloquée par le choix utilisateur.
+- bulletin_perime / bulletin_invalide / departement_absent / api_indisponible : pas d’envoi à partir de données inutilisables.
+- sous_le_seuil / automatique_desactive / deja_envoye : règle empêchant l’envoi automatique.
+- resultat_partiel : destinations avec résultats différents ; lire le détail.
+- action_notification_absente / erreur_notification : action introuvable ou erreur pendant l’appel.
 
-## Déduplication
+## Doublons
 
-Dernière signature par profil ET destination, enregistrée dans .storage.
-Inclut département, période, niveau et créneaux, pas seulement l'heure de publication.
-Une nouvelle journée, un changement de département ou de niveaux/horaires peut notifier.
-Ce n'est pas un historique illimité ni un mécanisme de rappel d'urgence.
-Après migration depuis bêta 2, une première notification peut être renvoyée du fait du nouveau format par destination.
-Les tags remplacent visuellement le message précédent du profil, sans garantir absence de son/vibration.
+Dernière signature par profil et destination, stockée localement. Inclut département, période, niveaux et créneaux, pas la seule heure de republication.
+Une nouvelle journée ou un changement de département/niveaux/horaires peut notifier.
+Ce n’est ni un historique illimité ni un rappel d’urgence. Les tags remplacent visuellement un message sans garantir l’absence de son/vibration.
+La migration depuis les premières préversions peut provoquer un premier nouvel envoi du fait du format par destination.
 
 ## Limites
 
-- Métropole et Corse, zones départementales, bulletin J seulement.
-- Pas d'outre-mer ni de sous-zones littorales séparées ; ne pas revendiquer une couverture complète vagues-submersion.
-- Maximum du bulletin d'aujourd'hui, pas nécessairement la vigilance maintenant. Des créneaux passés peuvent encore être affichés.
-- Horaires selon le fuseau Home Assistant, pas forcément celui du téléphone.
-- Pas de contrôle fiable de l'âge GPS. Une position disponible peut être ancienne.
-- Formats iOS non reconnus ignorés ; rendu icône/couleur Android dépend du système et n'est pas identique à iOS.
-- Pas de plages silencieuses, confirmations de lecture, annonce Google ni carte imposée automatiquement.
-- Sans garantie de disponibilité API, accès distant ou notification.
+Métropole et Corse, zones départementales et bulletin d’aujourd’hui. Sous-zones littorales séparées et outre-mer non couverts.
+Niveau maximal du bulletin, pas nécessairement actif maintenant ; des créneaux passés peuvent rester visibles.
+Horaires selon Home Assistant. Dernière position remontée, sans contrôle de l’âge GPS réel.
+Attributs pays/département attendus ; variantes non reconnues ignorées. Rendu de notification dépendant du téléphone.
+Pas de plages silencieuses, d’annonce Google ni de confirmation de lecture dans cette version.
 
-## Configuration fermée accidentellement
-
-Le formulaire affiche des avertissements et un récapitulatif. Il n'intercepte PAS le clic extérieur du frontend.
-Fermer avant validation abandonne les changements non enregistrés ; l'ancienne configuration enregistrée reste intacte.
-Un vrai dialogue de confirmation de fermeture demanderait un mécanisme frontend distinct : ce n'est pas implémenté ici.
+Les changements de configuration sont enregistrés seulement à la validation finale. Pas de confirmation de fermeture au clic extérieur ajoutée par l’intégration.

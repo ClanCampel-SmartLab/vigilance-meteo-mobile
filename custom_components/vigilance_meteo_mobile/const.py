@@ -1,6 +1,6 @@
 DOMAIN = "vigilance_meteo_mobile"
 NAME = "Vigilance météo mobile"
-VERSION = "0.1.0-beta.3"
+VERSION = "1.0.0"
 REPOSITORY = "https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile"
 API_URL = "https://public-api.meteofrance.fr/public/DPVigilance/v1/cartevigilance/encours"
 API_PORTAL = "https://portail-api.meteofrance.fr/"
