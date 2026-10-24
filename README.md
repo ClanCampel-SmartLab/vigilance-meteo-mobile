@@ -36,7 +36,25 @@ La configuration se fait dans l’interface Home Assistant : pas de script à é
 - **Test individuel** : bouton accessible dans la fiche du profil.
 - **Tableau de bord** : capteur détaillé et exemple de carte native, sans extension frontend obligatoire.
 
-## 📱 Avant de commencer
+- 
+## ☕ Soutenir le projet
+
+Vous appréciez Vigilance météo mobile et les créations de
+Clan'Campel-SmartLab ?
+
+Vous pouvez soutenir le développement, les améliorations et la
+maintenance du projet en m’offrant un café.
+
+Le soutien est entièrement facultatif : l’intégration reste gratuite,
+sans fonction réservée aux contributeurs.
+
+👉 [Offrez-moi un café via PayPal](https://www.paypal.me/ClanCampel)
+
+Votre soutien concerne mon travail sur cette intégration,
+et non les données fournies par Météo-France.
+
+
+## 📱C'est parti !  Avant de commencer
 
 Vous avez besoin de :
 
@@ -202,3 +220,4 @@ Données de vigilance : **Météo-France**, selon ses conditions d’utilisation
 Projet indépendant, non affilié à Météo-France, Home Assistant ou HACS.
 
 <p align="center">Conçu par <strong>by clan'campel</strong><br>ClanCampel — SmartLab</p>
+
