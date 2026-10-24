@@ -3,9 +3,11 @@
   "name": "Vigilance météo mobile — by clan'campel",
   "version": "0.1.0-beta.2",
   "config_flow": true,
-  "documentation": "https://github.com/OWNER/vigilance-meteo-mobile",
-  "issue_tracker": "https://github.com/OWNER/vigilance-meteo-mobile/issues",
-  "codeowners": [],
+  "documentation": "https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile",
+  "issue_tracker": "https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile/issues",
+  "codeowners": [
+    "@ClanCampel-SmartLab"
+  ],
   "dependencies": [
     "mobile_app"
   ],
