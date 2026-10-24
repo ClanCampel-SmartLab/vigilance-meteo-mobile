@@ -1,0 +1,9 @@
+DOMAIN = "vigilance_meteo_mobile"
+NAME = "Vigilance météo mobile"
+VERSION = "0.1.0-beta.2"
+API_URL = "https://public-api.meteofrance.fr/public/DPVigilance/v1/cartevigilance/encours"
+DEFAULT_OPTIONS = {"interval": 30, "minimum": 2, "enabled": False, "exclusions": "", "recipients": []}
+COLORS = {1: "vert", 2: "jaune", 3: "orange", 4: "rouge"}
+HEX_COLORS = {1: "#4CAF50", 2: "#FFEB3B", 3: "#FF9800", 4: "#F44336"}
+PHENOMENA = {"1": "Vent violent", "2": "Pluie-inondation", "3": "Orages", "4": "Crues", "5": "Neige-verglas", "6": "Canicule", "7": "Grand froid", "8": "Avalanches", "9": "Vagues-submersion"}
+ICONS = {"1": "mdi:weather-windy", "2": "mdi:weather-pouring", "3": "mdi:weather-lightning", "4": "mdi:waves", "5": "mdi:weather-snowy", "6": "mdi:thermometer-high", "7": "mdi:thermometer-low", "8": "mdi:alert", "9": "mdi:waves"}

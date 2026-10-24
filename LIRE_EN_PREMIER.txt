@@ -1,0 +1,17 @@
+VIGILANCE MÉTÉO MOBILE — by clan'campel
+
+1. Décompresser cette archive.
+2. Copier le CONTENU du dossier vigilance-meteo-mobile à la racine du dépôt GitHub,
+   y compris le dossier caché .github et le fichier .gitignore.
+3. GitHub → Actions → vérifier « Préparer les métadonnées GitHub ».
+   Il renseigne automatiquement le vrai propriétaire et le vrai dépôt.
+   Si nécessaire, méthode manuelle dans docs/PUBLICATION.md.
+4. Aucune clé API, aucun téléphone et aucun département exclu ne sont préconfigurés.
+5. Lire README.md puis docs/INSTALLATION.md pour Companion, capteurs et notifications.
+6. Tester localement avant d'activer l'automatique ou de recommander l'intégration.
+7. Le code est une BÊTA : pas encore exécutée dans un vrai Home Assistant ni validée HACS.
+8. Ne pas créer de release HACS tant que le manifest contient OWNER.
+
+L'icône PNG et sa source SVG sont dans assets ; les images intégrables Home Assistant
+sont également dans custom_components/vigilance_meteo_mobile/brand.
+La signature est : by clan'campel.

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+ <title>Vigilance météo mobile — by clan'campel</title>
+ <rect x="8" y="8" width="496" height="496" rx="80" fill="#102b46"/>
+ <g fill="#f6faff"><circle cx="180" cy="176" r="64"/><circle cx="259" cy="142" r="82"/><circle cx="337" cy="182" r="62"/><rect x="123" y="173" width="275" height="66" rx="30"/></g>
+ <path d="M263 218L216 311H259L234 374L324 271H280L307 218Z" fill="#ffbe35"/>
+ <path d="M100 267H196M75 298H179M107 329H188" stroke="#8cd6f3" stroke-width="12" stroke-linecap="round"/>
+ <circle cx="353" cy="302" r="10" fill="#ffde33"/><circle cx="385" cy="302" r="10" fill="#ff8c29"/><circle cx="417" cy="302" r="10" fill="#ee4c54"/>
+ <text x="256" y="464" text-anchor="middle" font-family="DejaVu Sans,Arial,sans-serif" font-size="45" font-weight="bold" fill="white">by clan'campel</text>
+</svg>
