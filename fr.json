@@ -1,0 +1,235 @@
+{
+  "title": "Vigilance météo mobile — by clan'campel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Clé API Météo-France — by clan'campel",
+        "description": "Vous n’avez pas encore de clé API ?\n\n[📖 Comment obtenir votre clé Météo-France](https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile/blob/main/docs/API.md)\n\n[🌐 Ouvrir le portail API Météo-France](https://portail-api.meteofrance.fr/)\n\nCréez votre accès à l’API Vigilance, puis collez uniquement la valeur de la clé ci-dessous, sans !secret. Elle sera conservée dans la configuration locale de Home Assistant.",
+        "data": {
+          "api_key": "Votre clé API Météo-France"
+        },
+        "data_description": {
+          "api_key": "Copiez ici la valeur de votre clé autorisée pour DPVigilance. Ne la partagez pas publiquement."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Remplacer la clé API Météo-France",
+        "description": "Vous n’avez pas encore de clé API ?\n\n[📖 Comment obtenir votre clé Météo-France](https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile/blob/main/docs/API.md)\n\n[🌐 Ouvrir le portail API Météo-France](https://portail-api.meteofrance.fr/)\n\nCréez votre accès à l’API Vigilance, puis collez uniquement la valeur de la clé ci-dessous, sans !secret. Elle sera conservée dans la configuration locale de Home Assistant.",
+        "data": {
+          "api_key": "Nouvelle clé API Météo-France"
+        }
+      },
+      "reconfigure": {
+        "title": "Modifier la clé API Météo-France",
+        "description": "Vous n’avez pas encore de clé API ?\n\n[📖 Comment obtenir votre clé Météo-France](https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile/blob/main/docs/API.md)\n\n[🌐 Ouvrir le portail API Météo-France](https://portail-api.meteofrance.fr/)\n\nCréez votre accès à l’API Vigilance, puis collez uniquement la valeur de la clé ci-dessous, sans !secret. Elle sera conservée dans la configuration locale de Home Assistant.",
+        "data": {
+          "api_key": "Nouvelle clé API Météo-France"
+        }
+      },
+      "menu": {
+        "title": "Destinataires et réglages",
+        "description": "Préparez vos téléphones et vos préférences. Pour deux personnes ayant chacune leur position, créez deux profils. Les changements sont enregistrés uniquement après validation du récapitulatif final.",
+        "menu_options": {
+          "add_recipient": "Ajouter un téléphone",
+          "settings": "Modifier les réglages",
+          "edit_recipient": "Modifier un téléphone configuré",
+          "remove_recipient": "Retirer un téléphone",
+          "finish": "Vérifier et enregistrer"
+        },
+        "menu_option_descriptions": {
+          "add_recipient": "Choisir sa position géocodée et les destinations de notification.",
+          "settings": "Définir le seuil, la fréquence, les exclusions et les envois automatiques.",
+          "edit_recipient": "Changer le nom, la position ou les destinations d’un profil existant.",
+          "remove_recipient": "Retirer un profil de la configuration.",
+          "finish": "Relire le récapitulatif puis confirmer l’enregistrement."
+        }
+      },
+      "settings": {
+        "title": "Réglages des notifications",
+        "description": "Aucun département n’est exclu par défaut. Laissez les notifications automatiques désactivées pendant vos premiers tests. Ces réglages seront appliqués après validation du récapitulatif final.",
+        "data": {
+          "interval": "Actualiser le bulletin toutes les… minutes",
+          "minimum": "Niveau minimum des notifications automatiques",
+          "exclusions": "Départements exclus — facultatif",
+          "enabled": "Activer les notifications automatiques"
+        },
+        "data_description": {
+          "interval": "Entre 15 et 1440 minutes. Choisissez une fréquence compatible avec votre quota Météo-France.",
+          "minimum": "Ce seuil concerne les notifications automatiques. Un test manuel peut envoyer un bulletin vert.",
+          "exclusions": "Laissez vide pour ne rien exclure. Sinon, séparez les codes par des virgules. La liste s’applique à tous les profils.",
+          "enabled": "Désactivé par défaut. L’activation peut provoquer un premier envoi dès l’enregistrement."
+        }
+      },
+      "recipient": {
+        "title": "Choisir le téléphone et ses notifications",
+        "description": "Choisissez la position à suivre, puis le ou les téléphones qui recevront son bulletin.\n\n[📖 Activer la localisation géocodée et vérifier les notifications](https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile/blob/main/docs/INSTALLATION.md)\n\nAttention : plusieurs destinations cochées reçoivent toutes le bulletin de la même position. Pour deux positions indépendantes, ajoutez deux profils.\n\nLes changements ne sont pas encore enregistrés.",
+        "data": {
+          "sensor": "Position du téléphone",
+          "notifications": "Envoyer le bulletin à",
+          "name": "Nom affiché — facultatif"
+        },
+        "data_description": {
+          "sensor": "Choisissez le téléphone dans la liste des capteurs géocodés. Une position pas encore reçue ne pourra pas être notifiée.",
+          "notifications": "Choisissez au moins une destination. Plusieurs choix signifient que le même bulletin est envoyé à chacune.",
+          "name": "Écrivez le nom de votre choix : Papa, Maman, Téléphone personnel… Laissez vide pour utiliser le nom du téléphone. Aucune personne Home Assistant n’est nécessaire."
+        }
+      },
+      "phone_help": {
+        "title": "Préparer l’application Companion",
+        "description": "Aucun capteur géocodé identifiable et/ou aucune action de notification Companion n’est disponible.\n\n1. Ouvrez Companion sur votre téléphone et sélectionnez le bon serveur.\n2. Activez Geocoded location dans Gérer les capteurs et l’envoi vers ce serveur.\n3. Vérifiez les autorisations de localisation et de notification.\n4. Vérifiez le capteur et l’action notify.mobile_app_… côté Home Assistant.\n\n[📖 Guide détaillé Android et iPhone](https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile/blob/main/docs/INSTALLATION.md)\n\nValidez cet écran après les vérifications pour réessayer.",
+        "data": {}
+      },
+      "edit_recipient": {
+        "title": "Modifier un téléphone configuré",
+        "description": "Sélectionnez le profil dont vous souhaitez modifier le nom, la position suivie ou les destinations de notification.",
+        "data": {
+          "recipient": "Téléphone / profil à modifier"
+        }
+      },
+      "remove_recipient": {
+        "title": "Retirer un téléphone",
+        "description": "Sélectionnez le profil à retirer. La suppression sera appliquée uniquement après validation du récapitulatif final.",
+        "data": {
+          "recipient": "Téléphone / profil à retirer"
+        }
+      },
+      "finish": {
+        "title": "Vérifier et enregistrer",
+        "description": "Téléphones / profils préparés :\n\n{recipients}\n\n- Actualisation : {interval} minutes.\n- Seuil automatique : niveau {minimum} (1 vert, 2 jaune, 3 orange, 4 rouge).\n- Départements exclus : {exclusions}.\n- Notifications automatiques : {automatic}.\n\nValidez ce dernier écran pour enregistrer.\n\nFermer la fenêtre avant cette validation abandonne les changements non enregistrés. L’intégration ne peut pas garantir une confirmation de fermeture au clic extérieur.",
+        "data": {}
+      }
+    },
+    "error": {
+      "invalid_auth": "Clé ou autorisation Météo-France refusée. Vérifiez la clé et votre accès à l’API Vigilance.",
+      "invalid_response": "La réponse reçue ne correspond pas au format de bulletin attendu.",
+      "cannot_connect": "Connexion impossible à Météo-France. Réessayez plus tard et vérifiez votre accès Internet.",
+      "invalid_departments": "Un code département n’est pas reconnu. Laissez la liste vide si vous ne souhaitez aucune exclusion.",
+      "invalid_service": "Choisissez au moins une action de notification Companion disponible.",
+      "invalid_sensor": "Ce capteur n’est plus disponible dans la liste. Vérifiez Companion puis réessayez.",
+      "duplicate_sensor": "Cette position est déjà suivie. Modifiez son profil existant ou choisissez un autre téléphone.",
+      "duplicate_recipient": "Ce téléphone est déjà associé à un profil."
+    },
+    "abort": {
+      "single_instance_allowed": "L’intégration est déjà configurée. Ajoutez ou modifiez vos téléphones dans ses options.",
+      "reauth_successful": "La clé API a été mise à jour.",
+      "reconfigure_successful": "La configuration a été mise à jour.",
+      "no_notification_service": "Aucune action Companion n’est disponible sur ce serveur. Vérifiez la connexion de l’application et les notifications."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Clé API Météo-France — by clan'campel",
+        "description": "Vous n’avez pas encore de clé API ?\n\n[📖 Comment obtenir votre clé Météo-France](https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile/blob/main/docs/API.md)\n\n[🌐 Ouvrir le portail API Météo-France](https://portail-api.meteofrance.fr/)\n\nCréez votre accès à l’API Vigilance, puis collez uniquement la valeur de la clé ci-dessous, sans !secret. Elle sera conservée dans la configuration locale de Home Assistant.",
+        "data": {
+          "api_key": "Votre clé API Météo-France"
+        },
+        "data_description": {
+          "api_key": "Copiez ici la valeur de votre clé autorisée pour DPVigilance. Ne la partagez pas publiquement."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Remplacer la clé API Météo-France",
+        "description": "Vous n’avez pas encore de clé API ?\n\n[📖 Comment obtenir votre clé Météo-France](https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile/blob/main/docs/API.md)\n\n[🌐 Ouvrir le portail API Météo-France](https://portail-api.meteofrance.fr/)\n\nCréez votre accès à l’API Vigilance, puis collez uniquement la valeur de la clé ci-dessous, sans !secret. Elle sera conservée dans la configuration locale de Home Assistant.",
+        "data": {
+          "api_key": "Nouvelle clé API Météo-France"
+        }
+      },
+      "reconfigure": {
+        "title": "Modifier la clé API Météo-France",
+        "description": "Vous n’avez pas encore de clé API ?\n\n[📖 Comment obtenir votre clé Météo-France](https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile/blob/main/docs/API.md)\n\n[🌐 Ouvrir le portail API Météo-France](https://portail-api.meteofrance.fr/)\n\nCréez votre accès à l’API Vigilance, puis collez uniquement la valeur de la clé ci-dessous, sans !secret. Elle sera conservée dans la configuration locale de Home Assistant.",
+        "data": {
+          "api_key": "Nouvelle clé API Météo-France"
+        }
+      },
+      "menu": {
+        "title": "Destinataires et réglages",
+        "description": "Préparez vos téléphones et vos préférences. Pour deux personnes ayant chacune leur position, créez deux profils. Les changements sont enregistrés uniquement après validation du récapitulatif final.",
+        "menu_options": {
+          "add_recipient": "Ajouter un téléphone",
+          "settings": "Modifier les réglages",
+          "edit_recipient": "Modifier un téléphone configuré",
+          "remove_recipient": "Retirer un téléphone",
+          "finish": "Vérifier et enregistrer"
+        },
+        "menu_option_descriptions": {
+          "add_recipient": "Choisir sa position géocodée et les destinations de notification.",
+          "settings": "Définir le seuil, la fréquence, les exclusions et les envois automatiques.",
+          "edit_recipient": "Changer le nom, la position ou les destinations d’un profil existant.",
+          "remove_recipient": "Retirer un profil de la configuration.",
+          "finish": "Relire le récapitulatif puis confirmer l’enregistrement."
+        }
+      },
+      "settings": {
+        "title": "Réglages des notifications",
+        "description": "Aucun département n’est exclu par défaut. Laissez les notifications automatiques désactivées pendant vos premiers tests. Ces réglages seront appliqués après validation du récapitulatif final.",
+        "data": {
+          "interval": "Actualiser le bulletin toutes les… minutes",
+          "minimum": "Niveau minimum des notifications automatiques",
+          "exclusions": "Départements exclus — facultatif",
+          "enabled": "Activer les notifications automatiques"
+        },
+        "data_description": {
+          "interval": "Entre 15 et 1440 minutes. Choisissez une fréquence compatible avec votre quota Météo-France.",
+          "minimum": "Ce seuil concerne les notifications automatiques. Un test manuel peut envoyer un bulletin vert.",
+          "exclusions": "Laissez vide pour ne rien exclure. Sinon, séparez les codes par des virgules. La liste s’applique à tous les profils.",
+          "enabled": "Désactivé par défaut. L’activation peut provoquer un premier envoi dès l’enregistrement."
+        }
+      },
+      "recipient": {
+        "title": "Choisir le téléphone et ses notifications",
+        "description": "Choisissez la position à suivre, puis le ou les téléphones qui recevront son bulletin.\n\n[📖 Activer la localisation géocodée et vérifier les notifications](https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile/blob/main/docs/INSTALLATION.md)\n\nAttention : plusieurs destinations cochées reçoivent toutes le bulletin de la même position. Pour deux positions indépendantes, ajoutez deux profils.\n\nLes changements ne sont pas encore enregistrés.",
+        "data": {
+          "sensor": "Position du téléphone",
+          "notifications": "Envoyer le bulletin à",
+          "name": "Nom affiché — facultatif"
+        },
+        "data_description": {
+          "sensor": "Choisissez le téléphone dans la liste des capteurs géocodés. Une position pas encore reçue ne pourra pas être notifiée.",
+          "notifications": "Choisissez au moins une destination. Plusieurs choix signifient que le même bulletin est envoyé à chacune.",
+          "name": "Écrivez le nom de votre choix : Papa, Maman, Téléphone personnel… Laissez vide pour utiliser le nom du téléphone. Aucune personne Home Assistant n’est nécessaire."
+        }
+      },
+      "phone_help": {
+        "title": "Préparer l’application Companion",
+        "description": "Aucun capteur géocodé identifiable et/ou aucune action de notification Companion n’est disponible.\n\n1. Ouvrez Companion sur votre téléphone et sélectionnez le bon serveur.\n2. Activez Geocoded location dans Gérer les capteurs et l’envoi vers ce serveur.\n3. Vérifiez les autorisations de localisation et de notification.\n4. Vérifiez le capteur et l’action notify.mobile_app_… côté Home Assistant.\n\n[📖 Guide détaillé Android et iPhone](https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile/blob/main/docs/INSTALLATION.md)\n\nValidez cet écran après les vérifications pour réessayer.",
+        "data": {}
+      },
+      "edit_recipient": {
+        "title": "Modifier un téléphone configuré",
+        "description": "Sélectionnez le profil dont vous souhaitez modifier le nom, la position suivie ou les destinations de notification.",
+        "data": {
+          "recipient": "Téléphone / profil à modifier"
+        }
+      },
+      "remove_recipient": {
+        "title": "Retirer un téléphone",
+        "description": "Sélectionnez le profil à retirer. La suppression sera appliquée uniquement après validation du récapitulatif final.",
+        "data": {
+          "recipient": "Téléphone / profil à retirer"
+        }
+      },
+      "finish": {
+        "title": "Vérifier et enregistrer",
+        "description": "Téléphones / profils préparés :\n\n{recipients}\n\n- Actualisation : {interval} minutes.\n- Seuil automatique : niveau {minimum} (1 vert, 2 jaune, 3 orange, 4 rouge).\n- Départements exclus : {exclusions}.\n- Notifications automatiques : {automatic}.\n\nValidez ce dernier écran pour enregistrer.\n\nFermer la fenêtre avant cette validation abandonne les changements non enregistrés. L’intégration ne peut pas garantir une confirmation de fermeture au clic extérieur.",
+        "data": {}
+      }
+    },
+    "error": {
+      "invalid_auth": "Clé ou autorisation Météo-France refusée. Vérifiez la clé et votre accès à l’API Vigilance.",
+      "invalid_response": "La réponse reçue ne correspond pas au format de bulletin attendu.",
+      "cannot_connect": "Connexion impossible à Météo-France. Réessayez plus tard et vérifiez votre accès Internet.",
+      "invalid_departments": "Un code département n’est pas reconnu. Laissez la liste vide si vous ne souhaitez aucune exclusion.",
+      "invalid_service": "Choisissez au moins une action de notification Companion disponible.",
+      "invalid_sensor": "Ce capteur n’est plus disponible dans la liste. Vérifiez Companion puis réessayez.",
+      "duplicate_sensor": "Cette position est déjà suivie. Modifiez son profil existant ou choisissez un autre téléphone.",
+      "duplicate_recipient": "Ce téléphone est déjà associé à un profil."
+    },
+    "abort": {
+      "single_instance_allowed": "L’intégration est déjà configurée. Ajoutez ou modifiez vos téléphones dans ses options.",
+      "reauth_successful": "La clé API a été mise à jour.",
+      "reconfigure_successful": "La configuration a été mise à jour.",
+      "no_notification_service": "Aucune action Companion n’est disponible sur ce serveur. Vérifiez la connexion de l’application et les notifications."
+    }
+  }
+}
