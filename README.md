@@ -63,6 +63,8 @@ sur votre instance Home Assistant :
 HACS doit être installé sur votre instance Home Assistant.
 
 
+
+
 ## 📱C'est parti !  Avant de commencer
 
 Vous avez besoin de :
