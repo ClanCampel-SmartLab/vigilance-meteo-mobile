@@ -1,19 +1,19 @@
 test:
   name: Tester les notifications
-  description: Teste les destinataires. Ignore le seuil et la désactivation automatique, mais respecte toujours les exclusions et les positions inconnues.
+  description: Envoie un vrai message TEST. Ignore le seuil et la désactivation automatique, mais respecte les exclusions et les positions inconnues.
   fields:
     entry_id:
       name: Identifiant de l'entrée (facultatif)
       selector:
         text:
     recipient_id:
-      name: Identifiant du destinataire (facultatif)
-      description: Attribut recipient_id du capteur de vigilance. Vide = tous les téléphones configurés.
+      name: Identifiant du profil (facultatif)
+      description: Attribut recipient_id du capteur. Vide = tous les profils. Chaque profil peut avoir plusieurs destinations.
       selector:
         text:
 refresh:
   name: Actualiser le bulletin
-  description: Actualise le bulletin et applique les règles automatiques si elles sont activées.
+  description: Actualise les données. Si l'automatique est activé, les règles habituelles peuvent notifier.
   fields:
     entry_id:
       name: Identifiant de l'entrée (facultatif)

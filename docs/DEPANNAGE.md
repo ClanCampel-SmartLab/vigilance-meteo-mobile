@@ -1,67 +1,63 @@
 # Dépannage
 
-## Capteur introuvable
+## Pas de capteur dans la liste
 
-- Vérifier le serveur actuellement ouvert : téléphone et navigateur peuvent pointer vers deux instances différentes.
-- Activer Geocoded location DANS l'application Companion, pas seulement l'entité côté Home Assistant.
-- Vérifier la sélection du serveur pour l'envoi des capteurs.
-- Dans Paramètres → Appareils et services → Entités, inclure les entités désactivées.
-- Chercher geocoded, le nom de l'appareil ou le nom traduit. Ne pas inventer un entity_id.
+- Bon serveur dans Companion et dans le navigateur ?
+- Geocoded location activé sur le téléphone ET envoi au bon serveur ?
+- Entité activée côté Home Assistant ? Inclure les entités désactivées dans la recherche.
+- Le filtre utilise nom/identifiant géocodé, registre et attributs attendus. Un format particulier peut nécessiter une adaptation du code.
+- Une simple batterie ou un device_tracker n'est pas proposé, volontairement.
 
-## Capteur unknown/unavailable ou sans département
+## Position inconnue
 
-- Vérifier localisation système, autorisations, réseau et accès au serveur.
-- Rouvrir Companion et actualiser ; attendre une remontée. Les données ne sont pas instantanées.
-- Vérifier les réglages de confidentialité des capteurs et localisation pour ce serveur.
-- Android : examiner les restrictions de batterie si les mises à jour cessent en arrière-plan.
-- iOS : vérifier le format d'attributs et les limites de compatibilité de cette bêta.
-- Ne pas remplacer une position inconnue par le département du domicile : cela enverrait un faux bulletin en voyage.
+Vérifier autorisations de localisation, réseau, accès distant, confidentialité des capteurs et restrictions batterie.
+Rouvrir Companion et attendre une mise à jour. Ne pas forcer un département fixe pour contourner l'erreur.
+Sur iOS, vérifier les attributs réellement envoyés et les limites décrites dans l'installation.
 
-## Action notify introuvable
+## Pas d'action Companion
 
-- Connecter l'application officielle au serveur qui exécute l'intégration.
-- Vérifier la présence du téléphone dans Mobile App.
-- Outils de développement → Actions → rechercher notify.mobile_app_.
-- Réouvrir l'application et laisser Home Assistant terminer son chargement.
-- Si l'action a été renommée/supprimée, retirer puis recréer le destinataire dans les options.
+Le téléphone doit être enregistré dans Mobile App sur ce serveur.
+Outils de développement → Actions → notify.mobile_app_. Tester un message direct.
+Après renommage/suppression d'une action, modifier le profil dans les options.
 
-## Pas de notification
+## Pas de message après test
 
-1. Tester d'abord directement notify.mobile_app_… avec un message simple.
-2. Vérifier les autorisations et canaux de notification, le mode Ne pas déranger et la connexion du téléphone.
-3. Vérifier les attributs du capteur source.
-4. Examiner le capteur de vigilance : status et department.
-5. Vérifier exclusions, niveau minimum, activation automatique et validité du bulletin.
-6. Utiliser le service test, puis lire sa réponse ou l'événement de résultat.
-7. Un test ignore le seuil et la désactivation automatique, mais pas une exclusion ou une position inconnue.
+- Vérifier les permissions et canaux de notification, le mode Ne pas déranger et le réseau du téléphone.
+- Vérifier le BON profil et ses destinations.
+- Lire last_test_status du capteur, réponse d'action ou événement vigilance_meteo_mobile_result.
+- Le test respecte les exclusions ; une exclusion ou une position inconnue n'est pas une panne.
+- Bouton Actualiser différent du bouton Envoyer une notification de test.
 
-## Mauvais téléphone notifié
+## Mauvais téléphone
 
-Désactiver l'automatique. Tester chaque notify séparément puis corriger l'association dans les options.
-Le nom du capteur et celui de l'action n'ont pas forcément le même suffixe.
+Désactiver l'automatique, tester les actions Companion séparément et corriger l'association.
+Plusieurs destinations d'un profil reçoivent la MÊME position. Pour deux positions indépendantes, créer deux profils.
 
-## Problème API
+## Ancien formulaire après mise à jour
 
-Voir [API.md](API.md). Une clé expirée/refusée demande une réauthentification ou reconfiguration.
-Augmenter l'intervalle si quota limité. Les anciens scripts utilisant la même clé consomment aussi ce quota.
-Les données en cache ne sont pas utilisées pour notifier après un échec de récupération signalé par le coordinateur.
+Vérifier version 0.1.0-beta.3 dans le manifeste installé, téléchargement de la bonne préversion et redémarrage complet.
+Actualiser ensuite le navigateur ou rouvrir Companion. Ne pas supprimer d'abord l'entrée : conserver la possibilité de migration.
+Les options migrées peuvent conserver le nom saisi en bêta 2 ; le nom facultatif concerne les nouveaux champs, pas un effacement de votre choix.
 
-## Intégration absente après copie
+## Pas de fiche ou bouton
 
-- Vérifier l'arborescence : custom_components/vigilance_meteo_mobile/manifest.json.
-- Redémarrer complètement Home Assistant, puis rechercher Vigilance météo mobile dans Ajouter une intégration.
-- Consulter Paramètres → Système → Journaux.
-- Vérifier la version Home Assistant minimale déclarée et les erreurs Python.
-- Cette bêta n'a pas encore été exécutée dans un vrai Home Assistant : un défaut d'intégration reste possible.
+La nouvelle version doit être chargée après redémarrage. Les fiches sont virtuelles et apparaissent dans les appareils associés à l'intégration.
+Consulter les journaux si le chargement des plateformes sensor/button échoue.
+Les boutons n'ont pas d'état marche/arrêt ; leur état est l'heure de la dernière pression et peut être unknown avant la première.
 
-## Icône/couleur différente
+## API
 
-Android et les constructeurs choisissent le rendu ; le thème peut modifier la perception du jaune.
-Le logo du dépôt n'est pas la petite icône système. Sur iOS, ne pas attendre le même rendu qu'Android.
-Les images locales brand sont prévues pour Home Assistant 2026.3+.
+Voir API.md : clé, souscription, quota et timeout. Les anciens scripts utilisant la même clé consomment aussi le quota.
+Une récupération échouée ne permet pas de notifier en prenant silencieusement un ancien bulletin comme neuf.
 
-## Ouvrir un ticket sans données privées
+## Icône
 
-Indiquer version Home Assistant, Companion, Android/iOS, version de l'intégration, étapes et erreur pertinente.
-Ne pas partager clé API, adresse exacte, coordonnées GPS, fichiers .storage, sauvegardes ou captures non masquées.
-Masquer aussi les noms/identifiants de destinataires si vous ne souhaitez pas les publier.
+Les PNG sont dans custom_components/vigilance_meteo_mobile/brand.
+L'icône d'Appareils et services peut fonctionner même si une version de HACS affiche Icon not available.
+Ne pas confondre logo de l'intégration et petites icônes météo des notifications.
+
+## Ticket public
+
+Fournir versions Home Assistant/Companion/système/intégration et erreur pertinente.
+Ne pas publier clé, adresse, coordonnées, .storage, secrets.yaml ou sauvegarde.
+Cette bêta reste à valider dans Home Assistant ; un défaut du code est possible malgré les tests locaux.

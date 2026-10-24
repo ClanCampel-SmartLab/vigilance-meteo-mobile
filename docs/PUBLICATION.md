@@ -1,76 +1,65 @@
-# Copier sur GitHub et publier
+# Mettre à jour le dépôt existant et publier la bêta 3
 
-L'affichage « ClanCampel — SmartLab » n'est pas utilisé pour deviner un identifiant GitHub.
-Le workflow lit le véritable `GITHUB_REPOSITORY`, par exemple propriétaire/nom-du-dépôt, au moment de la publication.
+NE PAS supprimer le dépôt GitHub ni l'entrée Home Assistant.
+Cette archive est reconstruite à partir du contenu fourni de la bêta 2 et des retours, pas téléchargée depuis votre branche actuelle.
+Elle inclut les métadonnées connues de ClanCampel-SmartLab/vigilance-meteo-mobile et le workflow verification.yml.
+Vérifier vos éventuelles modifications personnelles avant remplacement.
 
-## 1. Créer le dépôt
+## 1. Préparer
 
-1. Se connecter à GitHub avec votre compte.
-2. New repository → nom conseillé `vigilance-meteo-mobile` (libre de changer).
-3. Choisir Public si le dépôt doit être distribué publiquement par HACS.
-4. Créer le dépôt. Ne pas téléverser la clé API ni des fichiers personnels Home Assistant.
+1. Conserver une copie locale du dépôt et sauvegarder Home Assistant.
+2. Désactiver temporairement l'automatique dans les options de l'intégration existante.
+3. Décompresser l'archive bêta 3.
+4. Copier son CONTENU à la racine du même dépôt, pas le ZIP ni un niveau parent supplémentaire.
+5. Remplacer les fichiers existants et ajouter les nouveaux : button.py, entity.py, discovery.py, guides, exemples et tests.
+6. Inclure .github/workflows et .gitignore : les noms commençant par un point peuvent être cachés dans l'explorateur.
 
-## 2. Copier les fichiers
+Le workflow .github/workflows/verification.yml est bien inclus, vérifiable dans CONTENU_ARCHIVE.txt.
+Si l'interface Web ne téléverse pas les dossiers cachés, utiliser GitHub Desktop/git ou créer le fichier à son chemin exact sur GitHub.
+Si vous conservez d'anciens workflows tests.yml ou prepare-repository.yml, ils peuvent lancer des contrôles redondants ; verification.yml regroupe ces fonctions.
 
-1. Décompresser l'archive.
-2. Copier le CONTENU du dossier du projet à la racine du dépôt.
-3. La racine doit montrer README.md, hacs.json, custom_components, assets, docs, tests, tools et .github.
-4. Ne pas téléverser uniquement le ZIP, ni créer un niveau de dossier projet supplémentaire.
-5. Attention : .github et .gitignore sont cachés dans certains explorateurs. Ils doivent être inclus.
-6. Dans l'interface Web GitHub : Add file → Upload files, déposer les dossiers/fichiers puis valider le commit.
-   Si le navigateur ne transmet pas les fichiers cachés, utiliser GitHub Desktop ou git.
+## 2. Vérifier GitHub
 
-## 3. Préparer automatiquement les métadonnées
-
-Le workflow « Préparer les métadonnées GitHub » s'exécute lors du dépôt des fichiers.
-Il remplace les URLs OWNER provisoires de manifest.json avec le vrai propriétaire et le vrai dépôt,
-renseigne codeowners et crée un commit. Il ne change PAS le nom public « by clan'campel ».
-
-1. Ouvrir Actions et autoriser les workflows si GitHub le demande.
-2. Vérifier la réussite de « Préparer les métadonnées GitHub ».
-3. Vérifier que manifest.json ne contient plus OWNER et que codeowners contient le compte propriétaire.
-4. En cas de refus du push (droits/protection de branche), utiliser la méthode manuelle ci-dessous.
-5. Sur un fork, le workflow automatique est volontairement désactivé ; utiliser la méthode manuelle.
-
-### Méthode manuelle de secours
+Faire le commit, puis Actions → Préparation du dépôt et tests.
+Tests de syntaxe, logique et runtime SIMULÉ ; le job métadonnées utilise le vrai propriétaire/dépôt et ne modifie que le manifeste si nécessaire.
+Les URLs sont déjà correctes pour ce dépôt. En cas de fork, elles peuvent être modifiées avec :
 
 ```bash
-python tools/prepare_repository.py VRAI_IDENTIFIANT/VRAI_DEPOT
+python tools/prepare_repository.py PROPRIETAIRE/DEPOT
 ```
 
-Committer puis pousser le manifest modifié. Ou éditer documentation, issue_tracker et codeowners directement sur GitHub.
-Ne pas publier une release ni ajouter à HACS tant que les marqueurs OWNER ne sont pas remplacés.
-Un nom d'affichage contenant des espaces n'est pas un identifiant GitHub valide.
+Le workflow n'est pas exécuté automatiquement sur un fork. Aucun accès au compte GitHub n'est utilisé par l'archive en dehors des workflows que vous publiez.
+L'archive ne publie rien ni ne crée de release à votre place.
 
-## 4. Tests et validations
+## 3. Nouvelle release
 
-1. Dans Actions, vérifier « Tests de logique et syntaxe ».
-2. Installer localement sur une instance de validation : ajout, options, clé refusée, deux téléphones, position inconnue, exclusion, rechargement et redémarrage.
-3. Exécuter manuellement « Validation HACS et hassfest (manuelle) » depuis Actions.
-4. Les workflows sont fournis mais n'ont PAS été exécutés lors de la génération de l'archive.
-5. Corriger tout échec. La vérification brands est ignorée dans le job HACS car les images locales sont incluses pour Home Assistant 2026.3+ ; cela ne garantit pas l'acceptation au catalogue.
-6. Effectuer une revue de code avant de conseiller l'activation automatique à d'autres utilisateurs.
+Ne pas déplacer le tag v0.1.0-beta.2 existant.
+Créer une NOUVELLE release ciblant le commit actuel de main : tag v0.1.0-beta.3, titre v0.1.0-beta.3 — Configuration simplifiée et boutons de test.
+Cocher Préversion. Le manifeste contient version 0.1.0-beta.3.
+Inutile d'ajouter le ZIP complet comme asset : HACS utilise le code du dépôt dans sa structure habituelle.
+Une release de test n'est pas une certification HACS ni une preuve de fonctionnement réel.
 
-## 5. Créer une release
+## 4. Mise à jour HACS et retest
 
-Après préparation des métadonnées et validation : Releases → Draft a new release.
-Tag proposé : v0.1.0-beta.2, marquer comme préversion. Conserver manifest.version = 0.1.0-beta.2.
-Sur HACS, l'utilisateur peut devoir autoriser les versions bêta/préreleases.
-Une release n'est pas créée automatiquement et l'archive générée n'a rien publié sur votre compte.
+1. Dans HACS, ouvrir le dépôt et actualiser les informations si nécessaire.
+2. Choisir la préversion v0.1.0-beta.3 dans le téléchargement / autre version si elle n'est pas proposée par défaut.
+3. Télécharger puis redémarrer Home Assistant.
+4. Vérifier les options existantes : la migration de version de config 1 vers 2 convertit notification en notifications.
+5. Les identifiants de profils existants sont conservés par la conversion ; les boutons et appareils sont nouveaux.
+6. Vérifier liens API via Reconfigurer, liste de positions et récapitulatif via Options.
+7. Tester d'abord UN profil puis l'autre. Vérifier aussi les exclusions et la position inconnue.
+8. Réactiver l'automatique seulement après validation ; une première nouvelle alerte peut être envoyée après migration.
 
-## 6. Ajouter comme dépôt personnalisé HACS
+## 5. Validation pour distribution
 
-Dans HACS : menu des dépôts personnalisés → URL de votre dépôt → catégorie Intégration.
-Télécharger puis redémarrer Home Assistant. Ajouter ensuite l'intégration dans Appareils et services.
-Les libellés HACS peuvent évoluer. Suivre sa documentation officielle si nécessaire.
+Le workflow manuel validate.yml lance HACS Action et hassfest. Il n'a pas été exécuté lors de cette génération.
+Il n'ignore plus le contrôle brands ; certaines validations/catalogues peuvent demander des adaptations supplémentaires malgré les images locales.
+Corriger les erreurs avant demande de référencement HACS. La coche des tests locaux ne suffit pas.
+Tester configuration, options, migration réelle, appels API, notifications, déchargement, redémarrage et rendu de carte dans Home Assistant.
+Ne pas annoncer cette bêta comme validée ni promettre une confirmation de fermeture non implémentée.
 
-L'ajout au catalogue HACS par défaut est distinct et nécessite sa procédure d'acceptation.
-Aucune validation HACS ni inscription au catalogue n'est revendiquée pour cette archive.
+## Désinstallation si nécessaire
 
-## Licence et identité
-
-Code fourni sous licence MIT avec attribution « clan'campel / ClanCampel — SmartLab ».
-L'identité visuelle demandée porte exactement la signature « by clan'campel ».
-Les PNG et SVG fournis constituent une déclinaison vectorielle intégrable, pas une garantie de reproduction pixel pour pixel d'une maquette générée dans une conversation.
-Le logo GitHub du dépôt peut être ajouté manuellement à sa présentation ; cette intégration ne modifie pas l'avatar de votre compte GitHub.
-Les données Météo-France gardent leurs propres conditions d'usage ; ce n'est pas un produit officiel Météo-France.
+Supprimer l'entrée depuis Home Assistant puis les fichiers via HACS, redémarrer et vérifier les entités/appareils orphelins.
+Le stockage .storage de déduplication peut subsister. Ne pas éditer .storage à chaud ni sans sauvegarde.
+Révoquer la clé si elle ne sert plus. Ne pas supprimer le dépôt pour désinstaller une instance locale.

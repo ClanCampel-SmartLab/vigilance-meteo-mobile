@@ -2,11 +2,11 @@ import asyncio
 from .const import API_URL
 
 class InvalidAuth(Exception):
-    """L'accès Météo-France a été refusé."""
+    """Accès API refusé."""
 
 def extract_product(data):
     if not isinstance(data, dict):
-        raise ValueError("Réponse JSON non reconnue")
+        raise ValueError("Réponse non reconnue")
     product = data.get("product")
     if product is None and isinstance(data.get("content"), dict):
         product = data["content"].get("product")

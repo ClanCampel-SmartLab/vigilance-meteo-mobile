@@ -1,7 +1,9 @@
 DOMAIN = "vigilance_meteo_mobile"
 NAME = "Vigilance météo mobile"
-VERSION = "0.1.0-beta.2"
+VERSION = "0.1.0-beta.3"
+REPOSITORY = "https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile"
 API_URL = "https://public-api.meteofrance.fr/public/DPVigilance/v1/cartevigilance/encours"
+API_PORTAL = "https://portail-api.meteofrance.fr/"
 DEFAULT_OPTIONS = {"interval": 30, "minimum": 2, "enabled": False, "exclusions": "", "recipients": []}
 COLORS = {1: "vert", 2: "jaune", 3: "orange", 4: "rouge"}
 HEX_COLORS = {1: "#4CAF50", 2: "#FFEB3B", 3: "#FF9800", 4: "#F44336"}

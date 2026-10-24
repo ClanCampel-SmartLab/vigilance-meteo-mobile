@@ -1,77 +1,64 @@
-# Installation détaillée — depuis le téléphone
+# Installation guidée : du téléphone à l'intégration
 
-Les intitulés changent selon Android/iOS, la langue, la version de Companion et de Home Assistant.
-Ne sautez pas les étapes de test : une entité activée dans Home Assistant ne garantit pas que le téléphone lui envoie des données.
+Les intitulés varient selon Android/iOS, Companion, HACS et la langue de l'interface.
+Ne pas confondre activation d'une entité côté serveur et activation de la collecte sur le téléphone.
 
-## 1. Choisir le bon serveur
+## 1. Vérifier le bon serveur
 
-1. Ouvrir l'application officielle Home Assistant Companion sur le téléphone.
-2. Ajouter/connecter l'instance qui exécutera cette intégration.
-3. Avec plusieurs maisons/serveurs, sélectionner le bon serveur dans les réglages et le tableau de bord.
-4. Vérifier que l'appareil du téléphone apparaît dans Paramètres → Appareils et services → Mobile App sur CE serveur.
-5. Vérifier que le téléphone peut joindre ce serveur aussi hors du Wi-Fi si vous voulez les mises à jour en déplacement.
+Ouvrir Companion sur le téléphone et choisir le serveur qui exécutera l'intégration.
+Avec deux maisons, vérifier le serveur du tableau de bord ET celui sélectionné dans les paramètres des capteurs.
+Sur ce serveur, le téléphone doit apparaître dans Paramètres → Appareils et services → Mobile App.
+Pour les déplacements, configurer un accès distant sûr et fonctionnel. Ne pas exposer Home Assistant sur Internet sans protection.
 
-Ne publiez pas votre Home Assistant sur Internet sans configuration sécurisée. Utiliser une méthode d'accès distant appropriée.
+## 2. Android : activer le capteur
 
-## 2. Android : autorisations et capteur géocodé
-
-1. Sur le téléphone, ouvrir les paramètres Android de l'application Home Assistant.
-2. Autoriser les notifications. Autoriser la localisation précise et l'accès en arrière-plan si Android le propose et si vous acceptez cet usage.
+1. Dans les paramètres Android de l'application Home Assistant, autoriser les notifications.
+2. Autoriser la localisation précise et en arrière-plan si nécessaire et si vous acceptez ce fonctionnement.
 3. Vérifier que la localisation du téléphone est activée.
-4. Dans Companion : Paramètres → Application Companion → Gérer les capteurs (Manage sensors).
-5. Rechercher « Geocoded location » / « Localisation géocodée » ou le libellé approchant.
-6. Ouvrir sa fiche et activer le capteur.
-7. Avec plusieurs serveurs, ouvrir les réglages par serveur du capteur (icône d'expansion en haut selon la version) et activer l'envoi vers le serveur voulu.
-8. Dans les capteurs de localisation, vérifier « Background Location » / localisation en arrière-plan. Ce réglage est distinct du capteur géocodé.
-9. Vérifier que les réglages de confidentialité n'interdisent pas l'envoi des capteurs au serveur.
-10. Rouvrir l'application et laisser le temps à une mise à jour de se faire ; vérifier ensuite les valeurs côté Home Assistant.
+4. Dans Companion : Paramètres → Application Companion → Gérer les capteurs / Manage sensors.
+5. Chercher « Geocoded location » / « Localisation géocodée » et activer le capteur.
+6. Si plusieurs serveurs sont configurés, ouvrir les réglages par serveur de ce capteur et activer l'envoi au bon serveur.
+7. Vérifier également les capteurs/options « Background location » et la confidentialité d'envoi des capteurs.
+8. Revenir dans l'application, attendre une mise à jour et vérifier côté serveur.
 
-Il n'est pas nécessaire d'activer le mode GPS haute précision permanent : il peut augmenter fortement la consommation.
-Si les données cessent de remonter en arrière-plan, consulter les règles d'économie de batterie de votre constructeur et la documentation Companion.
-N'activer que les permissions nécessaires et comprises.
+Le mode GPS haute précision permanent n'est pas requis ; éviter de l'activer sans comprendre son coût en batterie.
+Si les données s'arrêtent en arrière-plan, examiner les restrictions de batterie du constructeur et la documentation Companion.
 
-## 3. iPhone : autorisations et vérification de compatibilité
+## 3. iPhone : activation et limites
 
-1. Réglages iOS → Applications → Home Assistant (ou Réglages → Home Assistant selon iOS).
-2. Autoriser les notifications. Pour le suivi en arrière-plan, vérifier les autorisations de localisation, notamment « Toujours » et « Position exacte », si proposées.
-3. Dans Companion : Paramètres → Application Companion → Capteurs (Sensors).
-4. Avec plusieurs serveurs, sélectionner le serveur concerné.
-5. Activer « Geocoded location » / localisation géocodée et vérifier les options de confidentialité d'envoi des capteurs.
-6. Revenir au tableau de bord, l'actualiser et vérifier le capteur côté serveur.
+Dans Réglages iOS → Applications → Home Assistant (ou Réglages → Home Assistant), vérifier les autorisations de notification et de localisation.
+Pour le suivi en arrière-plan, vérifier « Toujours » et « Position exacte » si proposés et acceptés.
+Dans Companion : Paramètres → Application Companion → Capteurs / Sensors → Geocoded location.
+Sélectionner le bon serveur et vérifier les options de confidentialité d'envoi.
+Les mises à jour dépendent d'iOS. La bêta attend `iso_country_code` et `sub_administrative_area` : vérifier leur présence.
+Tous les formats de capteur iOS ne sont pas pris en charge ; icônes/couleurs de notification différentes d'Android.
 
-iOS décide en partie des moments de mise à jour. Il ne s'agit pas d'un suivi instantané garanti.
-IMPORTANT : cette bêta attend `iso_country_code` et `sub_administrative_area`. Vérifier ces attributs ; tous les formats iOS ne sont pas encore pris en charge.
-Le rendu de l'icône/couleur Android n'est pas garanti sur iPhone.
+## 4. Vérifier le capteur côté Home Assistant
 
-## 4. Retrouver le capteur dans Home Assistant
-
-1. Sur le BON serveur, ouvrir Outils de développement → États.
-2. Filtrer les entités avec `geocoded` (ou rechercher le nom du capteur de localisation).
-3. Identifier le téléphone grâce à la colonne Appareil et à son nom.
-4. Copier l'identifiant complet, par exemple `sensor.mon_telephone_geocoded_location`.
-5. Vérifier qu'il n'est ni `unknown` ni `unavailable`.
-6. Vérifier dans les attributs :
+1. Sur le bon serveur : Outils de développement → États.
+2. Filtrer avec `geocoded` ou chercher le nom du téléphone.
+3. Lire la colonne Appareil pour ne pas confondre les téléphones.
+4. Exemple d'identifiant : `sensor.mon_telephone_geocoded_location`.
+5. Vérifier qu'il n'est pas unknown/unavailable et qu'il contient :
 
 ```yaml
 iso_country_code: FR
 sub_administrative_area: Morbihan
 ```
 
-Ceci est un exemple, pas une configuration à coller. Le nom du département doit correspondre à votre position.
-Le capteur géocodé n'est pas `device_tracker.…`. Le tracker ne fournit pas forcément le nom du département attendu.
-Ne publiez pas la capture complète de l'adresse du capteur.
+Exemple uniquement ; ne pas forcer ces valeurs. Le département doit être celui de la dernière position.
+Un device_tracker n'est pas le capteur géocodé attendu.
+Si l'entité est désactivée : Paramètres → Appareils et services → Entités → inclure les entités désactivées et activer celle du téléphone.
+Il faut AUSSI activer le capteur dans Companion. Ne pas partager une capture complète contenant votre adresse.
 
-Si l'entité est désactivée dans Home Assistant : Paramètres → Appareils et services → Entités → filtrer les entités désactivées,
-retrouver celle du téléphone et l'activer. Il faut AUSSI avoir activé le capteur dans Companion.
+## 5. Vérifier l'action de notification
 
-## 5. Retrouver l'action de notification
+Ce n'est pas un « capteur de notification ».
 
-Il s'agit d'une ACTION, pas d'un capteur de notification.
-
-1. Ouvrir Outils de développement → Actions (anciennement Services).
+1. Outils de développement → Actions (anciennement Services).
 2. Rechercher `notify.mobile_app_`.
-3. Repérer l'action du téléphone, par exemple `notify.mobile_app_mon_telephone`.
-4. Passer en édition YAML si souhaité et adapter :
+3. Choisir l'action du téléphone. Le suffixe n'est pas forcément identique au nom du capteur.
+4. Tester en adaptant :
 
 ```yaml
 action: notify.mobile_app_mon_telephone
@@ -79,46 +66,48 @@ data:
   message: "Test de notification Home Assistant"
 ```
 
-5. Cliquer sur Exécuter et vérifier physiquement quel téléphone reçoit le message.
-6. Si le mauvais téléphone reçoit, corriger votre association avant de poursuivre.
-7. Refaire le test pour chaque destinataire.
+5. Vérifier quel téléphone reçoit réellement le message. Refaire pour chaque appareil.
+6. Corriger l'association si le mauvais téléphone reçoit.
 
-Le nom de l'action et celui du capteur ne sont pas obligatoirement identiques. Ne pas les deviner.
-`notify.send_message` est une autre interface ; cette bêta demande l'action Companion `notify.mobile_app_…` pour les données avancées.
-Dans l'intégration, les actions Companion disponibles sont proposées dans une liste.
+Cette bêta utilise les actions Companion pour transmettre notification_icon et color. Une action générique notify.send_message ne les remplace pas automatiquement.
 
-## 6. Installer l'intégration
+## 6. Installer
 
-### HACS, après publication du dépôt
+### HACS
 
-1. S'assurer que HACS est déjà installé et fonctionnel.
-2. Dans HACS, ouvrir le menu des dépôts personnalisés (emplacement variable selon version).
-3. Ajouter l'URL du dépôt GitHub publié et choisir le type Intégration.
-4. Ouvrir Vigilance météo mobile puis télécharger.
-5. Redémarrer Home Assistant.
-6. Paramètres → Appareils et services → Ajouter une intégration → chercher Vigilance météo mobile.
+Ajouter l'URL du dépôt comme dépôt personnalisé, catégorie Intégration. Télécharger la préversion voulue si nécessaire.
+Redémarrer Home Assistant, puis Ajouter une intégration dans Appareils et services.
+L'ajout du dépôt HACS n'ajoute pas à lui seul une entrée configurée.
 
-### Installation locale de validation
+### Localement pour validation
 
-1. Sauvegarder Home Assistant.
-2. Copier le dossier `custom_components/vigilance_meteo_mobile` de ce dépôt vers le dossier `custom_components` de la configuration Home Assistant.
-3. Le résultat doit être `/config/custom_components/vigilance_meteo_mobile/manifest.json`, pas un double sous-dossier.
-4. Redémarrer Home Assistant, puis ajouter l'intégration comme ci-dessus.
+Copier `custom_components/vigilance_meteo_mobile` dans `/config/custom_components/`, sans niveau supplémentaire.
+Le manifeste doit être `/config/custom_components/vigilance_meteo_mobile/manifest.json`.
+Sauvegarder avant copie et redémarrer Home Assistant.
 
-## 7. Configurer
+## 7. Assistant de configuration
 
-1. Saisir la valeur de la clé API obtenue selon [API.md](API.md), sans `!secret`.
-2. Choisir un intervalle respectant votre quota (30 minutes par défaut).
-3. Choisir le seuil automatique (jaune par défaut).
-4. Laisser les exclusions VIDES si vous ne voulez exclure aucun département.
-5. Laisser l'automatique désactivé pendant les tests.
-6. Ajouter un téléphone : nom libre, capteur géocodé exact et action Companion du même appareil.
-7. Ajouter les autres téléphones si nécessaire.
-8. Choisir Terminer et enregistrer. Quitter avant cette étape n'enregistre pas les modifications.
-9. Tester selon [UTILISATION.md](UTILISATION.md), puis activer volontairement l'automatique dans les options.
+1. La première page contient le guide API et le portail officiel. Saisir la valeur de votre clé.
+2. Ajouter un téléphone/une position.
+3. Choisir dans la liste un capteur géocodé identifiable : les batteries et autres capteurs ne sont pas proposés.
+4. Un capteur actif encore unknown peut apparaître avec « position pas encore reçue ». Il ne sera pas notifié avant une position exploitable.
+5. Choisir une destination Companion. Plusieurs destinations cochées reçoivent toutes le bulletin de la MÊME position.
+6. Nom facultatif : Papa, Maman ou n'importe quel libellé. Vide = nom du téléphone. Pas besoin de créer une personne Home Assistant.
+7. Pour deux personnes qui peuvent voyager séparément, ajouter deux profils avec leurs positions respectives.
+8. Les réglages avancés sont séparés. Aucune exclusion par défaut ; automatique désactivé.
+9. Vérifier le récapitulatif et valider pour enregistrer.
 
-## Documentation officielle
+Si aucun capteur ou aucune action n'est disponible, l'écran d'aide explique les prérequis et permet de réessayer.
+La détection peut échouer sur un format non reconnu : il faut alors corriger/compléter la compatibilité, pas choisir un faux capteur.
 
-- Capteurs et réglages multi-serveurs : https://companion.home-assistant.io/docs/core/sensors/
-- Localisation et permissions : https://companion.home-assistant.io/docs/core/location/
-- Notifications : https://companion.home-assistant.io/docs/notifications/notifications-basic/
+## 8. Tester
+
+Ouvrir la fiche virtuelle de votre profil et appuyer sur Envoyer une notification de test.
+Le dernier résultat est visible dans les attributs du capteur et dans l'exemple de carte.
+Automatique à activer seulement après vérification du département, des destinations et des exclusions.
+
+## Références officielles
+
+- https://companion.home-assistant.io/docs/core/sensors/
+- https://companion.home-assistant.io/docs/core/location/
+- https://companion.home-assistant.io/docs/notifications/notifications-basic/

@@ -3,99 +3,99 @@
 # Vigilance météo mobile
 ### by clan'campel · ClanCampel — SmartLab
 
-Notifications météo individuelles dans Home Assistant, selon le département de la dernière position géocodée du téléphone.
+Les alertes de vigilance Météo-France vous accompagnent dans vos déplacements, selon votre dernière position connue.
+Intégration personnalisée pour Home Assistant. Aucun téléphone ni département exclu par défaut.
 
-> Version 0.1.0-beta.2 expérimentale. Ce dépôt est un logiciel tiers, non affilié à Météo-France, Home Assistant ou HACS.
-> Les tests purs et la syntaxe ont été vérifiés, mais l'intégration n'a pas encore été exécutée dans un véritable Home Assistant.
-> Consulter https://vigilance.meteofrance.fr/ pour les informations officielles. Ne pas utiliser comme unique dispositif d'alerte.
+> Bêta 0.1.0-beta.3. Logiciel tiers, non affilié à Météo-France, Home Assistant ou HACS.
+> Tests de logique et tests simulés réussis, mais cette version n'a pas encore été exécutée dans un vrai Home Assistant.
+> Consulter https://vigilance.meteofrance.fr/ et les consignes des autorités. Ne pas utiliser comme unique système d'alerte.
 
-## Ce que fait cette version
+## Nouveautés bêta 3
 
-- Configuration dans l'interface, sans modifier configuration.yaml.
-- Plusieurs destinataires, chacun avec son capteur géocodé et son action Companion.
-- Un bulletin national partagé entre les destinataires.
-- Département calculé séparément pour chaque téléphone : pas besoin de créer une météo par département.
-- Icône dynamique du phénomène le plus élevé ; icône d'alerte si plusieurs phénomènes sont à égalité.
-- Couleur dynamique du niveau maximal (rendu dépendant d'Android).
-- Exclusions facultatives : AUCUN département exclu par défaut.
-- Automatique désactivé par défaut, seuil jaune et intervalle de 30 minutes.
-- Test manuel, capteur par destinataire et mémorisation du dernier bulletin envoyé.
-- Pas de téléphone préconfiguré, pas de clé API fournie, pas d'annonce d'enceinte.
+- Liens vers le guide et le portail API dès la saisie de la clé.
+- Liste ciblée des capteurs géocodés avec nom lisible et disponibilité ; aide si aucun n'est trouvé.
+- Nom facultatif : le nom du téléphone est utilisé par défaut, sans lien obligatoire avec une personne Home Assistant.
+- Une ou plusieurs destinations de notification pour un même profil de position, avec avertissement explicite.
+- Ajout, modification et suppression de profils ; récapitulatif final avant enregistrement.
+- Réglages avancés séparés, aucune exclusion par défaut et automatique désactivé par défaut.
+- Une fiche virtuelle par destinataire avec capteur détaillé et bouton de test individuel.
+- Une fiche centrale avec bouton d'actualisation commun.
+- Exemple de carte native pour tableau de bord, sans Mushroom ni extension frontend.
+- Migration prévue des associations de la bêta 2, sans supprimer l'entrée ni saisir à nouveau la clé.
 
-## Commencer ici
+## Documentation
 
-1. [Guide complet : préparer Companion, capteurs et notifications](docs/INSTALLATION.md).
-2. [API Météo-France : obtenir et protéger sa clé](docs/API.md).
-3. [Options, tests, exemples et limites](docs/UTILISATION.md).
-4. [Dépannage pas à pas](docs/DEPANNAGE.md).
-5. [Publier ce dépôt sur GitHub et installer avec HACS](docs/PUBLICATION.md).
-6. [État réel des vérifications](VALIDATION.md).
+1. [Installer et préparer Companion, capteurs et notifications](docs/INSTALLATION.md).
+2. [Obtenir et protéger la clé Météo-France](docs/API.md).
+3. [Configurer, tester et comprendre les résultats](docs/UTILISATION.md).
+4. [Ajouter une carte au tableau de bord](docs/TABLEAU_DE_BORD.md).
+5. [Dépanner](docs/DEPANNAGE.md).
+6. [Mettre le dépôt à jour et publier une release](docs/PUBLICATION.md).
+7. [Vérifications effectuées et limites des tests](VALIDATION.md).
 
 ## Prérequis
 
-- Home Assistant Core 2026.3 ou plus récent : minimum déclaré et cible, non matrice de compatibilité testée.
-- HACS déjà installé si vous choisissez ce mode d'installation ; installation locale également possible.
-- Application officielle Home Assistant Companion sur chaque téléphone, connectée au BON serveur.
-- Capteur Geocoded location activé sur chaque téléphone et envoyé au serveur concerné.
-- Action `notify.mobile_app_…` du téléphone fonctionnelle.
-- Clé API Météo-France autorisée pour le bulletin Vigilance et accès Internet depuis Home Assistant.
+- Home Assistant Core 2026.3+ : cible minimale déclarée, pas une matrice de compatibilité testée.
+- Application officielle Home Assistant Companion, connectée au BON serveur, avec capteur géocodé et notifications.
+- Clé API Météo-France autorisée pour DPVigilance / cartevigilance/encours.
+- Accès Internet depuis Home Assistant.
+- HACS pour l'installation via dépôt personnalisé, ou copie locale pour la validation.
 
-## Installation rapide après publication
+## Installation HACS
 
-1. Attendre la réussite de l'action GitHub « Préparer les métadonnées GitHub ».
-2. Ajouter l'URL de VOTRE dépôt à HACS comme dépôt personnalisé, catégorie Intégration.
-3. Télécharger l'intégration et redémarrer Home Assistant.
-4. Paramètres → Appareils et services → Ajouter une intégration → Vigilance météo mobile.
-5. Saisir la clé API, conserver l'automatique désactivé, laisser les exclusions vides si vous n'en voulez pas.
-6. Ajouter chaque téléphone en associant le BON capteur à la BONNE action de notification ; terminer et enregistrer.
-7. Tester, puis activer l'automatique dans les options seulement après validation.
+Ajouter `https://github.com/ClanCampel-SmartLab/vigilance-meteo-mobile` comme dépôt personnalisé de type Intégration.
+Télécharger la version souhaitée (sélectionner la préversion si nécessaire), puis redémarrer Home Assistant.
+Paramètres → Appareils et services → Ajouter une intégration → Vigilance météo mobile.
+Saisir la clé, ajouter les profils et terminer le récapitulatif. Laisser l'automatique désactivé pendant les essais.
 
-## Test manuel
+## Mise à jour depuis la bêta 2
 
-Dans Outils de développement → Actions :
+Ne pas supprimer le dépôt GitHub, l'intégration ni l'entrée Home Assistant.
+Désactiver temporairement l'automatique dans les options, publier/télécharger la nouvelle version puis redémarrer.
+Les associations existantes sont migrées vers une liste de destinations ; vérifier les options avant réactivation.
+La migration du format est testée comme fonction pure, pas encore dans le cycle réel de Home Assistant.
+La mémoire de déduplication étant désormais par destination, une première nouvelle notification automatique peut être envoyée après mise à jour.
+
+## Tester sans YAML
+
+Dans Appareils et services → Vigilance météo mobile, ouvrir la fiche virtuelle du destinataire.
+Dans ses contrôles, appuyer sur « Envoyer une notification de test ».
+Ce bouton envoie réellement aux destinations de CE profil. Il respecte les exclusions et les positions inconnues.
+Le bouton central « Actualiser le bulletin » récupère les données et peut déclencher les règles automatiques si elles sont activées.
+
+L'action existante reste disponible :
 
 ```yaml
 action: vigilance_meteo_mobile.test
 data: {}
 ```
 
-Ce test concerne tous les destinataires configurés. Il respecte toujours les exclusions et les positions inconnues.
-Pour un seul téléphone, voir [le guide d'utilisation](docs/UTILISATION.md).
+Elle vise tous les profils, sauf si recipient_id est renseigné.
 
-## Exemple de notification
+## Données et confidentialité
 
-```text
-Vigilance météo : Département (XX).
-Niveau maximal du bulletin d'aujourd'hui : jaune.
-Vent violent : jaune du 24/10 à 20:00 au 25/10 à 00:00.
-Bulletin selon votre dernière position connue.
-Bulletin mis à jour : …
-```
+Métropole et Corse, bulletin J uniquement. Niveau maximal d'aujourd'hui, pas nécessairement celui de maintenant.
+Sous-zones littorales et outre-mer non couverts. La dernière position peut être ancienne : l'âge GPS n'est pas contrôlé.
+L'intégration lit les attributs `iso_country_code` et `sub_administrative_area` ; tous les formats iOS ne sont pas garantis.
+Elle ne transmet pas l'adresse ou les coordonnées à Météo-France : téléchargement du bulletin national.
+Companion garde ses propres mécanismes de géocodage et de notifications ; ce n'est pas une promesse de fonctionnement 100 % local.
+La clé reste dans le stockage Home Assistant, sans chiffrement supplémentaire par cette intégration. Protéger accès et sauvegardes.
+Aucune modification de configuration.yaml ou secrets.yaml, aucun script/automation créé, aucun tableau de bord modifié automatiquement.
 
-Le niveau est le maximum du bulletin d'aujourd'hui : ce n'est pas nécessairement le niveau à cet instant.
+## Fermeture du formulaire
 
-## Limites à lire avant activation
+Un récapitulatif et des avertissements clarifient l'enregistrement. Le clic extérieur est géré par Home Assistant.
+L'intégration ne prétend PAS intercepter cette fermeture ou afficher une confirmation « fermer sans enregistrer ».
+Les modifications ne sont conservées qu'après validation du récapitulatif final.
 
-Métropole et Corse, bulletin J uniquement. Les zones littorales séparées et l'outre-mer NE SONT PAS pris en charge.
-Les créneaux déjà passés du bulletin peuvent être affichés. La position utilisée est la dernière remontée ; son âge GPS n'est pas contrôlé.
-Une position disponible peut être ancienne. L'affichage d'icône/couleur dépend du téléphone ; iOS n'offre pas le même rendu qu'Android.
-La correspondance de département exige les attributs `iso_country_code` et `sub_administrative_area` attendus.
-Les formats non conformes de capteur, notamment selon les versions iOS, ne sont pas garantis et seront ignorés.
-
-## Confidentialité
-
-La clé API reste dans la configuration locale Home Assistant, sans chiffrement supplémentaire par cette intégration.
-L'intégration n'envoie ni l'adresse ni les coordonnées GPS à Météo-France : elle télécharge le bulletin national.
-Companion utilise ses propres mécanismes de localisation, géocodage et notification ; cela ne signifie donc pas « aucune donnée ne quitte le téléphone ».
-Protéger Home Assistant, les sauvegardes, .storage et secrets.yaml. Ne pas partager d'adresse ou de clé dans les tickets GitHub.
-
-## Développement et licence
+## Développement
 
 ```bash
 python tests/run.py
 python -m compileall -q custom_components tools tests
 ```
 
-Les tests ne simulent pas l'ensemble de Home Assistant. Les workflows de validation HACS/hassfest sont fournis, à exécuter et corriger si nécessaire avant diffusion.
+Les tests simulés utilisent des doubles de Home Assistant : ils ne garantissent ni la compatibilité frontend ni le chargement réel.
+Les workflows HACS/hassfest sont fournis séparément, à exécuter. Le référencement au catalogue HACS n'est pas automatique.
 
-Code sous licence MIT. Identité visuelle : « by clan'campel ». Source des données : Météo-France, soumise à ses propres conditions d'utilisation.
+Code et ressources sous licence MIT. Signature : by clan'campel. Les données Météo-France restent soumises à leurs conditions d'usage.

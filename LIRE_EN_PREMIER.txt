@@ -1,17 +1,22 @@
-VIGILANCE MÉTÉO MOBILE — by clan'campel
+VIGILANCE MÉTÉO MOBILE — by clan'campel — 0.1.0-beta.3
 
-1. Décompresser cette archive.
-2. Copier le CONTENU du dossier vigilance-meteo-mobile à la racine du dépôt GitHub,
-   y compris le dossier caché .github et le fichier .gitignore.
-3. GitHub → Actions → vérifier « Préparer les métadonnées GitHub ».
-   Il renseigne automatiquement le vrai propriétaire et le vrai dépôt.
-   Si nécessaire, méthode manuelle dans docs/PUBLICATION.md.
-4. Aucune clé API, aucun téléphone et aucun département exclu ne sont préconfigurés.
-5. Lire README.md puis docs/INSTALLATION.md pour Companion, capteurs et notifications.
-6. Tester localement avant d'activer l'automatique ou de recommander l'intégration.
-7. Le code est une BÊTA : pas encore exécutée dans un vrai Home Assistant ni validée HACS.
-8. Ne pas créer de release HACS tant que le manifest contient OWNER.
+NE PAS SUPPRIMER LE DÉPÔT NI L'ENTRÉE HOME ASSISTANT.
 
-L'icône PNG et sa source SVG sont dans assets ; les images intégrables Home Assistant
-sont également dans custom_components/vigilance_meteo_mobile/brand.
-La signature est : by clan'campel.
+1. Désactiver temporairement les envois automatiques dans les options existantes.
+2. Décompresser l'archive et copier son CONTENU à la racine du dépôt GitHub existant.
+3. Remplacer les anciens fichiers, ajouter les nouveaux, inclure .github et .gitignore.
+4. Vérifier le workflow Préparation du dépôt et tests.
+5. Créer une nouvelle release v0.1.0-beta.3 sur le commit à jour, cochée préversion.
+6. Dans HACS, télécharger cette préversion puis redémarrer Home Assistant.
+7. Ouvrir les options, vérifier les profils et tester les boutons sur les fiches virtuelles.
+8. Aucune exclusion par défaut. Une position et plusieurs destinations = même bulletin copié.
+9. Pour deux personnes indépendantes : deux profils avec leur propre position.
+10. Lire VALIDATION.md : tests locaux et simulés, pas de validation réelle Home Assistant/HACS ici.
+
+Nouveautés : liens API, choix de positions ciblé, nom facultatif, destinations multiples,
+récapitulatif, appareils virtuels, boutons de test et exemple de carte native.
+La confirmation de fermeture au clic extérieur n'est PAS implémentée : avertissements uniquement.
+Aucun script ni modification de secrets.yaml/configuration.yaml. Rien n'est ajouté automatiquement aux dashboards.
+
+Le dossier .github est présent dans ce ZIP. CONTENU_ARCHIVE.txt en donne la liste.
+Un explorateur peut masquer les dossiers commençant par un point.

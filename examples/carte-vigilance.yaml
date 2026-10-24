@@ -1,0 +1,68 @@
+# Remplacer les TROIS entity_id d'exemple par ceux de votre installation.
+# Aucun composant frontend supplémentaire requis.
+type: vertical-stack
+cards:
+  - type: markdown
+    content: >-
+      {% set e = 'sensor.vigilance_meteo_micki' %}
+      {% set niveau = state_attr(e, 'level') | int(0) %}
+      {% set symboles = {1: '🟢', 2: '🟡', 3: '🟠', 4: '🔴'} %}
+      ## {{ symboles.get(niveau, '⚪') }} Vigilance — {{ state_attr(e, 'recipient_name') or 'Téléphone' }}
+
+      {% set dept = state_attr(e, 'department') %}
+      {% if dept %}
+      📍 **{{ state_attr(e, 'department_name') }} ({{ dept }})**
+      {% else %}
+      📍 Département non disponible
+      {% endif %}
+
+      {% set statut = state_attr(e, 'status') %}
+      {% if statut == 'ok' %}
+      Maximum d'aujourd'hui : **{{ state_attr(e, 'level_name') }}**
+      {% elif statut == 'departement_exclu' %}
+      Notifications exclues pour ce département.
+      Maximum du bulletin : {{ state_attr(e, 'level_name') }}.
+      {% elif statut == 'position_inconnue' %}
+      Position pas encore reçue. Vérifiez Companion.
+      {% else %}
+      Données indisponibles ou non prises en charge : {{ statut or states(e) }}.
+      {% endif %}
+
+      {% for p in state_attr(e, 'phenomena') or [] %}
+      **{{ p.name }}** : {{ p.color }}
+
+      {% for plage in p.windows %}
+      - {{ plage }}
+      {% endfor %}
+      {% endfor %}
+
+      _Selon la dernière position connue. Maximum du bulletin, pas forcément actif maintenant._
+
+      {% set dernier = state_attr(e, 'last_test_status') %}
+      {% if dernier %}
+      Dernier test : {{ dernier }}.
+      {% endif %}
+  - type: horizontal-stack
+    cards:
+      - type: button
+        entity: button.vigilance_meteo_micki_envoyer_une_notification_de_test
+        name: Tester la notification
+        icon: mdi:bell-check-outline
+        show_state: false
+        tap_action:
+          action: perform-action
+          perform_action: button.press
+          target:
+            entity_id: button.vigilance_meteo_micki_envoyer_une_notification_de_test
+          confirmation:
+            text: Envoyer une notification de test aux destinations de ce profil ?
+      - type: button
+        entity: button.vigilance_meteo_mobile_actualiser_le_bulletin
+        name: Actualiser
+        icon: mdi:refresh
+        show_state: false
+        tap_action:
+          action: perform-action
+          perform_action: button.press
+          target:
+            entity_id: button.vigilance_meteo_mobile_actualiser_le_bulletin

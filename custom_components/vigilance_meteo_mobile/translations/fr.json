@@ -4,79 +4,88 @@
     "step": {
       "user": {
         "title": "Vigilance météo mobile — by clan'campel",
-        "description": "Saisissez une clé autorisée pour l’API Vigilance Météo-France. Aucun téléphone ni département exclu n’est préconfiguré. Consultez le guide Companion avant de continuer.",
+        "description": "Vous n’avez pas encore de clé ? [Obtenir une clé : guide pas à pas]({api_guide}) · [Ouvrir le portail Météo-France]({api_portal}).\n\nSaisissez uniquement sa valeur, sans !secret. La clé reste dans la configuration locale de Home Assistant.",
         "data": {
           "api_key": "Clé API Météo-France"
-        },
-        "data_description": {
-          "api_key": "Valeur de la clé, sans !secret. Stockée localement ; ne pas publier."
         }
-      },
-      "settings": {
-        "title": "Réglages des notifications",
-        "description": "Laissez les exclusions vides pour couvrir tous les départements pris en charge. Testez avant d’activer l’automatique.",
-        "data": {
-          "interval": "Actualisation en minutes",
-          "minimum": "Niveau minimum automatique",
-          "exclusions": "Départements exclus (facultatif)",
-          "enabled": "Activer les notifications automatiques"
-        },
-        "data_description": {
-          "interval": "Entre 15 et 1440 minutes. Respectez les quotas de votre accès API.",
-          "minimum": "Seuil des envois automatiques uniquement. Le test peut envoyer un bulletin vert.",
-          "exclusions": "Vide par défaut. Codes séparés par des virgules, par exemple 01,2A. Liste commune à tous les téléphones.",
-          "enabled": "Désactivé par défaut. Une activation peut envoyer immédiatement un premier bulletin."
-        }
-      },
-      "menu": {
-        "title": "Destinataires et réglages",
-        "menu_options": {
-          "add_recipient": "Ajouter un téléphone",
-          "settings": "Modifier les réglages",
-          "remove_recipient": "Retirer un téléphone",
-          "finish": "Terminer et enregistrer"
-        }
-      },
-      "add_recipient": {
-        "title": "Associer un téléphone",
-        "description": "Dans Companion, activez Geocoded location. Repérez ensuite le capteur dans Outils de développement → États. Vérifiez l’action notify.mobile_app_… avec un message test.",
-        "data": {
-          "name": "Nom du destinataire",
-          "sensor": "Capteur Geocoded location",
-          "notification": "Action de notification Companion"
-        },
-        "data_description": {
-          "name": "Nom libre affiché dans Home Assistant.",
-          "sensor": "Choisir le capteur du téléphone concerné, pas son device_tracker.",
-          "notification": "Choisir l’action du même téléphone. Ne pas se fier uniquement à un nom ressemblant."
-        }
-      },
-      "remove_recipient": {
-        "title": "Retirer un destinataire",
-        "data": {
-          "recipient": "Destinataire"
-        }
-      },
-      "finish": {
-        "title": "Enregistrer"
       },
       "reauth_confirm": {
-        "title": "Mettre à jour la clé Météo-France",
+        "title": "Remplacer une clé refusée",
+        "description": "Vous n’avez pas encore de clé ? [Obtenir une clé : guide pas à pas]({api_guide}) · [Ouvrir le portail Météo-France]({api_portal}).\n\nSaisissez uniquement sa valeur, sans !secret. La clé reste dans la configuration locale de Home Assistant.",
         "data": {
           "api_key": "Nouvelle clé API"
-        },
-        "data_description": {
-          "api_key": "Une requête vérifie la clé avant enregistrement."
         }
       },
       "reconfigure": {
-        "title": "Mettre à jour la clé Météo-France",
+        "title": "Modifier la clé Météo-France",
+        "description": "Vous n’avez pas encore de clé ? [Obtenir une clé : guide pas à pas]({api_guide}) · [Ouvrir le portail Météo-France]({api_portal}).\n\nSaisissez uniquement sa valeur, sans !secret. La clé reste dans la configuration locale de Home Assistant.",
         "data": {
           "api_key": "Nouvelle clé API"
+        }
+      },
+      "menu": {
+        "title": "Téléphones et réglages",
+        "description": "Profils préparés : {count}. Ajoutez un profil par position à suivre. Les changements ne seront enregistrés qu’après le récapitulatif final.",
+        "menu_options": {
+          "add_recipient": "Ajouter un téléphone / une position",
+          "edit_recipient": "Modifier un profil",
+          "remove_recipient": "Retirer un profil",
+          "settings": "Réglages avancés",
+          "finish": "Vérifier et enregistrer"
+        }
+      },
+      "settings": {
+        "title": "Réglages avancés",
+        "description": "Aucune exclusion par défaut. Laissez l’automatique désactivé pendant les essais. Ces changements restent à enregistrer dans le récapitulatif final.",
+        "data": {
+          "interval": "Actualisation en minutes",
+          "minimum": "Niveau minimum automatique",
+          "exclusions": "Départements exclus — facultatif",
+          "enabled": "Activer les notifications automatiques"
         },
         "data_description": {
-          "api_key": "Une requête vérifie la clé avant enregistrement."
+          "interval": "De 15 à 1440 minutes. Respectez les quotas de votre accès API.",
+          "minimum": "Seuil automatique seulement : le test peut envoyer un bulletin vert.",
+          "exclusions": "Vide = aucune exclusion. Codes séparés par des virgules. Liste commune à tous les profils.",
+          "enabled": "Peut envoyer un premier bulletin dès l’enregistrement ou le rechargement."
         }
+      },
+      "recipient": {
+        "title": "Choisir le téléphone et ses notifications",
+        "description": "Choisissez la position à suivre dans la liste, puis sa destination de notification. [Aide Companion et capteurs]({phone_guide}).\n\nPlusieurs destinations cochées reçoivent TOUTES le bulletin de CETTE position. Pour deux personnes en déplacement séparé, créez deux profils.\n\nRien n’est enregistré avant le récapitulatif final.",
+        "data": {
+          "sensor": "Position du téléphone",
+          "notifications": "Envoyer le bulletin à",
+          "name": "Nom affiché — facultatif"
+        },
+        "data_description": {
+          "sensor": "Seuls les capteurs géocodés identifiables et activés sont proposés. Une position non reçue peut être préparée.",
+          "notifications": "Choisir le téléphone correspondant. Plusieurs choix = copie du même bulletin, pas plusieurs positions.",
+          "name": "Exemples : Papa, Maman, Téléphone personnel. Aucun lien avec une personne Home Assistant. Vide = nom du téléphone."
+        }
+      },
+      "phone_help": {
+        "title": "Préparer Companion avant de continuer",
+        "description": "Aucun capteur géocodé activé identifiable et/ou aucune action Companion n’est disponible.\n\n1. Ouvrez Companion sur le téléphone et choisissez le BON serveur.\n2. Activez Geocoded location dans Gérer les capteurs et autorisez l’envoi vers ce serveur.\n3. Autorisez la localisation et les notifications.\n4. Vérifiez le capteur et notify.mobile_app_… dans les outils de développement.\n\n[Guide détaillé Android/iPhone]({phone_guide}). Revenez ici puis validez pour réessayer.",
+        "data": {}
+      },
+      "edit_recipient": {
+        "title": "Quel profil modifier ?",
+        "data": {
+          "recipient": "Profil"
+        }
+      },
+      "remove_recipient": {
+        "title": "Quel profil retirer ?",
+        "description": "La suppression sera appliquée après confirmation du récapitulatif.",
+        "data": {
+          "recipient": "Profil"
+        }
+      },
+      "finish": {
+        "title": "Récapitulatif — enregistrer la configuration",
+        "description": "{recipients}\n\n- Actualisation : {interval} minutes.\n- Seuil automatique : niveau {minimum} (1 vert, 2 jaune, 3 orange, 4 rouge).\n- Exclusions : {exclusions}.\n- Notifications automatiques : {automatic}.\n\nValidez ce dernier écran pour enregistrer. Fermer la fenêtre maintenant abandonne les changements non enregistrés. La fermeture au clic extérieur dépend de Home Assistant et n’est pas interceptée par l’intégration.",
+        "data": {}
       }
     },
     "error": {
@@ -84,12 +93,12 @@
       "invalid_response": "Structure du bulletin non reconnue.",
       "cannot_connect": "Connexion impossible à Météo-France.",
       "invalid_departments": "Code département non reconnu. Laisser vide pour aucune exclusion.",
-      "invalid_service": "Action Companion introuvable.",
-      "duplicate_recipient": "Ce capteur ou cette action est déjà associé."
+      "invalid_service": "Choisir au moins une action Companion disponible.",
+      "invalid_sensor": "Ce capteur n’est plus disponible dans la liste.",
+      "duplicate_sensor": "Cette position est déjà suivie. Modifier son profil ou choisir un autre téléphone."
     },
     "abort": {
-      "single_instance_allowed": "Une instance existe déjà. Ajouter les téléphones dans ses options.",
-      "no_notification_service": "Aucune action notify.mobile_app_… disponible. Connectez Companion et vérifiez les prérequis.",
+      "single_instance_allowed": "Une instance existe déjà. Ajouter ou modifier les téléphones dans ses options.",
       "reauth_successful": "Clé mise à jour.",
       "reconfigure_successful": "Configuration mise à jour."
     }
@@ -98,79 +107,88 @@
     "step": {
       "user": {
         "title": "Vigilance météo mobile — by clan'campel",
-        "description": "Saisissez une clé autorisée pour l’API Vigilance Météo-France. Aucun téléphone ni département exclu n’est préconfiguré. Consultez le guide Companion avant de continuer.",
+        "description": "Vous n’avez pas encore de clé ? [Obtenir une clé : guide pas à pas]({api_guide}) · [Ouvrir le portail Météo-France]({api_portal}).\n\nSaisissez uniquement sa valeur, sans !secret. La clé reste dans la configuration locale de Home Assistant.",
         "data": {
           "api_key": "Clé API Météo-France"
-        },
-        "data_description": {
-          "api_key": "Valeur de la clé, sans !secret. Stockée localement ; ne pas publier."
         }
-      },
-      "settings": {
-        "title": "Réglages des notifications",
-        "description": "Laissez les exclusions vides pour couvrir tous les départements pris en charge. Testez avant d’activer l’automatique.",
-        "data": {
-          "interval": "Actualisation en minutes",
-          "minimum": "Niveau minimum automatique",
-          "exclusions": "Départements exclus (facultatif)",
-          "enabled": "Activer les notifications automatiques"
-        },
-        "data_description": {
-          "interval": "Entre 15 et 1440 minutes. Respectez les quotas de votre accès API.",
-          "minimum": "Seuil des envois automatiques uniquement. Le test peut envoyer un bulletin vert.",
-          "exclusions": "Vide par défaut. Codes séparés par des virgules, par exemple 01,2A. Liste commune à tous les téléphones.",
-          "enabled": "Désactivé par défaut. Une activation peut envoyer immédiatement un premier bulletin."
-        }
-      },
-      "menu": {
-        "title": "Destinataires et réglages",
-        "menu_options": {
-          "add_recipient": "Ajouter un téléphone",
-          "settings": "Modifier les réglages",
-          "remove_recipient": "Retirer un téléphone",
-          "finish": "Terminer et enregistrer"
-        }
-      },
-      "add_recipient": {
-        "title": "Associer un téléphone",
-        "description": "Dans Companion, activez Geocoded location. Repérez ensuite le capteur dans Outils de développement → États. Vérifiez l’action notify.mobile_app_… avec un message test.",
-        "data": {
-          "name": "Nom du destinataire",
-          "sensor": "Capteur Geocoded location",
-          "notification": "Action de notification Companion"
-        },
-        "data_description": {
-          "name": "Nom libre affiché dans Home Assistant.",
-          "sensor": "Choisir le capteur du téléphone concerné, pas son device_tracker.",
-          "notification": "Choisir l’action du même téléphone. Ne pas se fier uniquement à un nom ressemblant."
-        }
-      },
-      "remove_recipient": {
-        "title": "Retirer un destinataire",
-        "data": {
-          "recipient": "Destinataire"
-        }
-      },
-      "finish": {
-        "title": "Enregistrer"
       },
       "reauth_confirm": {
-        "title": "Mettre à jour la clé Météo-France",
+        "title": "Remplacer une clé refusée",
+        "description": "Vous n’avez pas encore de clé ? [Obtenir une clé : guide pas à pas]({api_guide}) · [Ouvrir le portail Météo-France]({api_portal}).\n\nSaisissez uniquement sa valeur, sans !secret. La clé reste dans la configuration locale de Home Assistant.",
         "data": {
           "api_key": "Nouvelle clé API"
-        },
-        "data_description": {
-          "api_key": "Une requête vérifie la clé avant enregistrement."
         }
       },
       "reconfigure": {
-        "title": "Mettre à jour la clé Météo-France",
+        "title": "Modifier la clé Météo-France",
+        "description": "Vous n’avez pas encore de clé ? [Obtenir une clé : guide pas à pas]({api_guide}) · [Ouvrir le portail Météo-France]({api_portal}).\n\nSaisissez uniquement sa valeur, sans !secret. La clé reste dans la configuration locale de Home Assistant.",
         "data": {
           "api_key": "Nouvelle clé API"
+        }
+      },
+      "menu": {
+        "title": "Téléphones et réglages",
+        "description": "Profils préparés : {count}. Ajoutez un profil par position à suivre. Les changements ne seront enregistrés qu’après le récapitulatif final.",
+        "menu_options": {
+          "add_recipient": "Ajouter un téléphone / une position",
+          "edit_recipient": "Modifier un profil",
+          "remove_recipient": "Retirer un profil",
+          "settings": "Réglages avancés",
+          "finish": "Vérifier et enregistrer"
+        }
+      },
+      "settings": {
+        "title": "Réglages avancés",
+        "description": "Aucune exclusion par défaut. Laissez l’automatique désactivé pendant les essais. Ces changements restent à enregistrer dans le récapitulatif final.",
+        "data": {
+          "interval": "Actualisation en minutes",
+          "minimum": "Niveau minimum automatique",
+          "exclusions": "Départements exclus — facultatif",
+          "enabled": "Activer les notifications automatiques"
         },
         "data_description": {
-          "api_key": "Une requête vérifie la clé avant enregistrement."
+          "interval": "De 15 à 1440 minutes. Respectez les quotas de votre accès API.",
+          "minimum": "Seuil automatique seulement : le test peut envoyer un bulletin vert.",
+          "exclusions": "Vide = aucune exclusion. Codes séparés par des virgules. Liste commune à tous les profils.",
+          "enabled": "Peut envoyer un premier bulletin dès l’enregistrement ou le rechargement."
         }
+      },
+      "recipient": {
+        "title": "Choisir le téléphone et ses notifications",
+        "description": "Choisissez la position à suivre dans la liste, puis sa destination de notification. [Aide Companion et capteurs]({phone_guide}).\n\nPlusieurs destinations cochées reçoivent TOUTES le bulletin de CETTE position. Pour deux personnes en déplacement séparé, créez deux profils.\n\nRien n’est enregistré avant le récapitulatif final.",
+        "data": {
+          "sensor": "Position du téléphone",
+          "notifications": "Envoyer le bulletin à",
+          "name": "Nom affiché — facultatif"
+        },
+        "data_description": {
+          "sensor": "Seuls les capteurs géocodés identifiables et activés sont proposés. Une position non reçue peut être préparée.",
+          "notifications": "Choisir le téléphone correspondant. Plusieurs choix = copie du même bulletin, pas plusieurs positions.",
+          "name": "Exemples : Papa, Maman, Téléphone personnel. Aucun lien avec une personne Home Assistant. Vide = nom du téléphone."
+        }
+      },
+      "phone_help": {
+        "title": "Préparer Companion avant de continuer",
+        "description": "Aucun capteur géocodé activé identifiable et/ou aucune action Companion n’est disponible.\n\n1. Ouvrez Companion sur le téléphone et choisissez le BON serveur.\n2. Activez Geocoded location dans Gérer les capteurs et autorisez l’envoi vers ce serveur.\n3. Autorisez la localisation et les notifications.\n4. Vérifiez le capteur et notify.mobile_app_… dans les outils de développement.\n\n[Guide détaillé Android/iPhone]({phone_guide}). Revenez ici puis validez pour réessayer.",
+        "data": {}
+      },
+      "edit_recipient": {
+        "title": "Quel profil modifier ?",
+        "data": {
+          "recipient": "Profil"
+        }
+      },
+      "remove_recipient": {
+        "title": "Quel profil retirer ?",
+        "description": "La suppression sera appliquée après confirmation du récapitulatif.",
+        "data": {
+          "recipient": "Profil"
+        }
+      },
+      "finish": {
+        "title": "Récapitulatif — enregistrer la configuration",
+        "description": "{recipients}\n\n- Actualisation : {interval} minutes.\n- Seuil automatique : niveau {minimum} (1 vert, 2 jaune, 3 orange, 4 rouge).\n- Exclusions : {exclusions}.\n- Notifications automatiques : {automatic}.\n\nValidez ce dernier écran pour enregistrer. Fermer la fenêtre maintenant abandonne les changements non enregistrés. La fermeture au clic extérieur dépend de Home Assistant et n’est pas interceptée par l’intégration.",
+        "data": {}
       }
     },
     "error": {
@@ -178,12 +196,12 @@
       "invalid_response": "Structure du bulletin non reconnue.",
       "cannot_connect": "Connexion impossible à Météo-France.",
       "invalid_departments": "Code département non reconnu. Laisser vide pour aucune exclusion.",
-      "invalid_service": "Action Companion introuvable.",
-      "duplicate_recipient": "Ce capteur ou cette action est déjà associé."
+      "invalid_service": "Choisir au moins une action Companion disponible.",
+      "invalid_sensor": "Ce capteur n’est plus disponible dans la liste.",
+      "duplicate_sensor": "Cette position est déjà suivie. Modifier son profil ou choisir un autre téléphone."
     },
     "abort": {
-      "single_instance_allowed": "Une instance existe déjà. Ajouter les téléphones dans ses options.",
-      "no_notification_service": "Aucune action notify.mobile_app_… disponible. Connectez Companion et vérifiez les prérequis.",
+      "single_instance_allowed": "Une instance existe déjà. Ajouter ou modifier les téléphones dans ses options.",
       "reauth_successful": "Clé mise à jour.",
       "reconfigure_successful": "Configuration mise à jour."
     }

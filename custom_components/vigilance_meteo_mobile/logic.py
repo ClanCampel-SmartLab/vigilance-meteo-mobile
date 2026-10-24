@@ -1,14 +1,24 @@
 import hashlib
 import json
 import unicodedata
+from copy import deepcopy
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
-from .const import COLORS, HEX_COLORS, PHENOMENA, ICONS
+from .const import COLORS, HEX_COLORS, PHENOMENA, ICONS, DEFAULT_OPTIONS
 
 
 def normalize(value):
     value = str(value or "").lower().replace("’", "'")
     return " ".join("".join(c for c in unicodedata.normalize("NFKD", value) if not unicodedata.combining(c)).split())
+
+
+def normalize_options(options):
+    result = {**deepcopy(DEFAULT_OPTIONS), **deepcopy(dict(options))}
+    for phone in result["recipients"]:
+        if "notifications" not in phone:
+            phone["notifications"] = [phone.pop("notification")] if phone.get("notification") else []
+        phone["notifications"] = list(dict.fromkeys(phone["notifications"]))
+    return result
 
 
 def department(attributes, names):
@@ -54,7 +64,7 @@ def build_payload(product, period, zone, code, name, tz_name):
         raise ValueError("Niveau inconnu")
     tz = ZoneInfo(tz_name)
     lines = [f"Vigilance météo : {name} ({code}).", f"Niveau maximal du bulletin d'aujourd'hui : {COLORS[level]}."]
-    phenomena = []
+    signed, details = [], []
     for item in zone.get("phenomenon_items", []):
         maximum = int(item.get("phenomenon_max_color_id", 0))
         if maximum <= 1:
@@ -75,14 +85,15 @@ def build_payload(product, period, zone, code, name, tz_name):
             windows.append(f"{COLORS[color]} du {begin.astimezone(tz):%d/%m à %H:%M} au {end.astimezone(tz):%d/%m à %H:%M}")
             signed_windows.append((begin.isoformat(), end.isoformat(), color))
         detail = "; ".join(windows) if windows else f"{COLORS[maximum]} — horaires non fournis"
-        lines.append(f"{PHENOMENA.get(identifier, 'Phénomène ' + identifier)} : {detail}.")
-        phenomena.append((identifier, maximum, sorted(signed_windows)))
-    if not phenomena:
+        label = PHENOMENA.get(identifier, 'Phénomène ' + identifier)
+        lines.append(f"{label} : {detail}.")
+        details.append({"id": identifier, "name": label, "level": maximum, "color": COLORS[maximum], "windows": windows})
+        signed.append((identifier, maximum, sorted(signed_windows)))
+    if not details:
         lines.append("Aucun phénomène départemental en jaune, orange ou rouge dans ce bulletin.")
     lines.extend(["Bulletin selon votre dernière position connue.", "Bulletin mis à jour : " + str(product.get("update_time", "non fourni"))])
-    top = max((p[1] for p in phenomena), default=1)
-    leading = [p[0] for p in phenomena if p[1] == top]
+    highest = max((p[1] for p in signed), default=1)
+    leading = [p[0] for p in signed if p[1] == highest]
     icon = ICONS.get(leading[0], "mdi:alert") if len(leading) == 1 else ("mdi:alert" if leading else "mdi:weather-partly-cloudy")
-    signed = [code, period.get("begin_validity_time"), level, sorted(phenomena)]
-    signature = hashlib.sha256(json.dumps(signed, ensure_ascii=False).encode()).hexdigest()
-    return {"message": "\n".join(lines), "icon": icon, "color": HEX_COLORS[level], "signature": signature, "level": level}
+    signature = hashlib.sha256(json.dumps([code, period.get("begin_validity_time"), level, sorted(signed)], ensure_ascii=False).encode()).hexdigest()
+    return {"message": "\n".join(lines), "icon": icon, "color": HEX_COLORS[level], "signature": signature, "level": level, "phenomena": details, "bulletin_updated": product.get("update_time"), "period_end": period.get("end_validity_time")}

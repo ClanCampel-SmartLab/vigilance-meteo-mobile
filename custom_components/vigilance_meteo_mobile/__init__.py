@@ -1,26 +1,35 @@
 from homeassistant.const import Platform
 from homeassistant.core import SupportsResponse
 from homeassistant.exceptions import HomeAssistantError
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.event import async_track_state_change_event
 from .const import DOMAIN
+from .logic import normalize_options
 from .coordinator import VigilanceCoordinator
 
-PLATFORMS = [Platform.SENSOR]
+PLATFORMS = [Platform.SENSOR, Platform.BUTTON]
+
+async def async_migrate_entry(hass, entry):
+    if entry.version > 2:
+        return False
+    if entry.version == 1:
+        hass.config_entries.async_update_entry(entry, options=normalize_options(entry.options), version=2)
+    return True
 
 async def async_setup_entry(hass, entry):
     coordinator = VigilanceCoordinator(hass, entry)
     await coordinator.async_config_entry_first_refresh()
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
+    dr.async_get(hass).async_get_or_create(config_entry_id=entry.entry_id, identifiers={(DOMAIN, entry.entry_id)}, name="Vigilance météo mobile", manufacturer="by clan'campel", model="Bulletin national Météo-France")
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     def schedule():
-        if coordinator.last_update_success and not coordinator.suspend_notifications:
+        if coordinator.last_update_success and not coordinator.suspend_notifications and not coordinator.publishing_status:
             entry.async_create_background_task(hass, coordinator.async_notify(), "Vigilance notifications")
     entry.async_on_unload(coordinator.async_add_listener(schedule))
     def position_changed(event):
         coordinator.async_update_listeners()
-    sensors = [p["sensor"] for p in coordinator.settings["recipients"]]
-    entry.async_on_unload(async_track_state_change_event(hass, sensors, position_changed))
+    entry.async_on_unload(async_track_state_change_event(hass, [p["sensor"] for p in coordinator.settings["recipients"]], position_changed))
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
     async def handle_service(call):
@@ -32,16 +41,8 @@ async def async_setup_entry(hass, entry):
         for identifier, current in list(entries.items()):
             if requested and requested != identifier:
                 continue
-            recipient = call.data.get("recipient_id")
-            if recipient and recipient not in {p["id"] for p in current.settings["recipients"]}:
-                raise HomeAssistantError("Destinataire inconnu")
             if call.service == "test":
-                current.suspend_notifications = True
-                try:
-                    await current.async_request_refresh()
-                    results[identifier] = await current.async_notify(test=True, recipient=recipient)
-                finally:
-                    current.suspend_notifications = False
+                results[identifier] = await current.async_test(call.data.get("recipient_id"))
             else:
                 await current.async_request_refresh()
                 results[identifier] = {"updated": current.last_update_success}

@@ -1,119 +1,98 @@
-# Réglages, tests et limites
+# Utilisation, boutons et réglages
 
-## Options disponibles
+## Réglages avancés
 
-Paramètres → Appareils et services → entrée Vigilance météo mobile → Configurer/Options (selon version).
-
-| Réglage | Défaut | Fonction |
+| Option | Défaut | Description |
 |---|---|---|
-| Actualisation | 30 min | De 15 à 1440 minutes ; adapter aux quotas API et au délai accepté. |
-| Niveau minimum automatique | Jaune | Vert, jaune, orange ou rouge. Ne s'applique pas au test manuel. |
-| Départements exclus | Vide | Codes séparés par des virgules, sans obligation de remplir. Liste commune à tous les destinataires. |
-| Notifications automatiques | Désactivées | Activer seulement après test. Peut provoquer un premier envoi immédiat. |
-| Destinataires | Aucun | Ajouter au moins un téléphone et associer capteur/action. |
+| Actualisation | 30 minutes | 15 à 1440 ; respecter les quotas et le délai accepté. |
+| Niveau minimum automatique | Jaune | Vert, jaune, orange ou rouge. Test manuel indépendant du seuil. |
+| Départements exclus | Vide | Liste commune, facultative. Codes séparés par des virgules. |
+| Automatique | Désactivé | Activer volontairement après les tests ; peut envoyer un bulletin immédiatement. |
 
-Aucun département n'est exclu par défaut et aucun téléphone n'est imposé.
-Pour changer le capteur ou l'action d'un destinataire existant, le retirer puis le recréer ; son identifiant et sa mémoire de notification changent.
-Les changements ne sont enregistrés qu'après Terminer et enregistrer. L'intégration est ensuite rechargée.
+Modifier depuis l'entrée → Configurer/Options. Ajouter/modifier/retirer un profil puis terminer le récapitulatif.
+Les options ne sont enregistrées qu'après sa validation. Le rechargement peut actualiser puis notifier si l'automatique est activé.
 
-## Test manuel de tous les téléphones configurés
+## Position et destinations : deux notions
+
+Un profil = UNE position suivie + UNE OU PLUSIEURS destinations recevant le même bulletin.
+Pour Papa et Maman en déplacements séparés : créer deux profils, une position personnelle pour chacun.
+Pour copier le bulletin de Papa sur les deux téléphones : choisir la position de Papa et cocher les deux actions dans son profil.
+Si une même destination figure dans plusieurs profils, elle peut recevoir plusieurs bulletins : c'est volontaire.
+
+## Fiches et boutons
+
+Une fiche centrale Vigilance météo mobile contient Actualiser le bulletin.
+Chaque profil a une fiche virtuelle Vigilance météo — Nom : capteur et bouton Envoyer une notification de test.
+Ces fiches représentent l'intégration et ses profils, pas un nouvel appareil physique installé sur le téléphone.
+La page d'intégration n'est pas modifiée pour y injecter arbitrairement un gros bouton : ouvrir la fiche du profil et ses contrôles.
+Le bouton test envoie à toutes les destinations du profil, pas aux autres profils.
+Le bouton Actualiser peut déclencher les règles automatiques si elles sont activées.
+
+## Tests via actions, si souhaité
+
+Tous les profils :
 
 ```yaml
 action: vigilance_meteo_mobile.test
 data: {}
 ```
 
-Ce test envoie réellement une notification. Il ignore le seuil minimum et la désactivation des envois automatiques.
-Il respecte TOUJOURS : exclusions, position inconnue, pays non couvert, département absent et validité du bulletin.
-S'il ne peut pas envoyer, il retourne un motif plutôt que d'inventer une position.
-
-## Test manuel d'un seul téléphone
-
-1. Dans Outils de développement → États, ouvrir le capteur `Vigilance météo …` créé pour le destinataire.
-2. Copier son attribut `recipient_id`.
-3. Adapter :
+Un profil : copier son attribut recipient_id depuis son capteur, puis :
 
 ```yaml
 action: vigilance_meteo_mobile.test
 data:
-  recipient_id: IDENTIFIANT_COPIE_DANS_LE_CAPTEUR
+  recipient_id: IDENTIFIANT_DU_PROFIL
 ```
 
-Ce n'est ni le nom de la personne, ni le nom du téléphone, ni son entity_id.
-Pour éviter tout envoi automatique pendant les premiers essais, conserver l'automatique désactivé.
-
-## Résultats du test
-
-Le service accepte une réponse facultative contenant les résultats par identifiant.
-L'événement `vigilance_meteo_mobile_result` fournit également les motifs ; l'écouter dans Outils de développement → Événements si nécessaire.
-
-| Motif | Signification |
-|---|---|
-| test_envoye | Appel de notification accepté ; ne garantit pas la lecture ni la livraison physique. |
-| envoye | Notification automatique appelée. |
-| position_inconnue | Capteur absent, unknown ou unavailable. |
-| departement_non_pris_en_charge | Pays/attributs non reconnus ou territoire non couvert. |
-| departement_exclu | Code présent dans les exclusions choisies par l'utilisateur. |
-| bulletin_perime | Aucune période J actuellement valide. |
-| departement_absent | Zone départementale absente du bulletin. |
-| bulletin_invalide | Niveau, dates ou structure de zone non interprétables. |
-| api_indisponible | Pas de récupération réussie disponible. |
-| sous_le_seuil | Niveau inférieur au seuil automatique. |
-| deja_envoye | Dernière signature identique pour ce destinataire. |
-| automatique_desactive | Aucun envoi automatique autorisé. |
-| action_notification_absente | Action notify supprimée ou non chargée. |
-| erreur_notification | Erreur signalée par Home Assistant pendant l'appel. |
-
-Un capteur inconnu n'entraîne pas nécessairement une erreur rouge : il peut être ignoré normalement.
-
-## Actualisation
+Actualiser :
 
 ```yaml
 action: vigilance_meteo_mobile.refresh
 data: {}
 ```
 
-Actualise le bulletin. Si l'automatique est activé, les règles habituelles peuvent déclencher un envoi.
-Une mise à jour du capteur de position réévalue les destinataires avec le bulletin en cache s'il est encore valide.
-Ce n'est pas une promesse de notification immédiate après chaque déplacement.
+Le test ignore seuil et désactivation automatique, mais respecte TOUJOURS position inconnue, exclusions, pays/zone non reconnus et validité du bulletin.
+Il ne modifie pas la mémoire des alertes automatiques. Il envoie un vrai message TEST et ne garantit ni livraison physique ni lecture.
+Le dernier test est conservé en mémoire dans les attributs last_test_status et last_test_time ; il peut disparaître au rechargement.
+L'état du bouton indique sa dernière pression, PAS une confirmation de livraison.
 
-## Doublons
+## Résultats
 
-Le dernier bulletin envoyé est mémorisé par destinataire dans le stockage local Home Assistant.
-La signature inclut le département, la période, le niveau et les créneaux des phénomènes, pas uniquement l'heure de publication.
-Une simple republication à l'identique ne suffit donc pas à renvoyer le même message.
-Une nouvelle journée, un changement de département ou des niveaux/horaires peut déclencher un nouvel envoi.
-Il s'agit de la DERNIÈRE signature, pas d'un historique illimité : après un autre bulletin, un retour peut notifier à nouveau.
+L'action retourne éventuellement les résultats par profil et par destination.
+L'événement vigilance_meteo_mobile_result les expose aussi. Le capteur expose le dernier statut de test.
 
-Les messages ont un tag par destinataire pour remplacer le précédent visuellement. Un tag ne garantit pas l'absence de son/vibration.
-Le test utilise un tag séparé et ne modifie pas la mémoire des envois automatiques.
+- test_envoye / envoye : appels de notification acceptés.
+- position_inconnue : entité absente, unknown ou unavailable.
+- departement_non_pris_en_charge : pays, attributs ou territoire non reconnus.
+- departement_exclu : exclusion choisie ; les données peuvent rester visibles dans la carte mais l'envoi est bloqué.
+- bulletin_perime / bulletin_invalide / departement_absent / api_indisponible : pas d'envoi à partir de données inutilisables.
+- sous_le_seuil / automatique_desactive / deja_envoye : règle automatique empêchant l'envoi.
+- resultat_partiel : destinations avec résultats différents ; consulter leur détail.
+- action_notification_absente / erreur_notification : action introuvable ou erreur pendant l'appel.
 
-## Icônes et couleurs
+## Déduplication
 
-Vent : vent ; pluie : pluie ; orages : éclair ; crues : vagues ; neige : neige ; canicule : thermomètre haut ; grand froid : thermomètre bas ; avalanches : alerte.
-Un seul phénomène au niveau le plus élevé : son icône. Plusieurs à égalité : alerte. Aucun phénomène au-dessus du vert : nuage/éclaircie.
-La couleur suit le maximum départemental vert/jaune/orange/rouge. Le jaune peut varier selon l'écran/thème.
-Android décide où appliquer la couleur ; l'icône de la barre d'état peut rester monochrome. iOS ne garantit pas ce rendu.
-L'icône du dépôt avec la signature est distincte de ces petites icônes de notification.
+Dernière signature par profil ET destination, enregistrée dans .storage.
+Inclut département, période, niveau et créneaux, pas seulement l'heure de publication.
+Une nouvelle journée, un changement de département ou de niveaux/horaires peut notifier.
+Ce n'est pas un historique illimité ni un mécanisme de rappel d'urgence.
+Après migration depuis bêta 2, une première notification peut être renvoyée du fait du nouveau format par destination.
+Les tags remplacent visuellement le message précédent du profil, sans garantir absence de son/vibration.
 
-## Limites de couverture et de temps
+## Limites
 
-- Métropole et Corse, 96 départements ; pas d'outre-mer.
-- Zones départementales uniquement, pas les sous-zones littorales séparées. Aucune couverture complète vagues-submersion n'est revendiquée.
-- Bulletin J seulement ; pas de notifications dédiées à demain.
-- Le maximum d'aujourd'hui n'est pas nécessairement actif maintenant. Les créneaux déjà passés peuvent encore apparaître.
-- Horaires convertis selon le fuseau configuré dans Home Assistant, pas nécessairement le fuseau du téléphone.
-- Le département est issu de `iso_country_code` et `sub_administrative_area`. Pas de géocodage de coordonnées par l'intégration.
-- Les variantes non reconnues d'attributs, notamment selon iOS, ne sont pas garanties.
-- Pas de contrôle fiable de l'ancienneté GPS : une dernière position peut être ancienne sans état unknown.
-- Pas de plages silencieuses, répétitions d'urgence, accusés de lecture ni annonce Google dans cette bêta.
-- La disponibilité des données/API et de la notification mobile n'est pas garantie.
+- Métropole et Corse, zones départementales, bulletin J seulement.
+- Pas d'outre-mer ni de sous-zones littorales séparées ; ne pas revendiquer une couverture complète vagues-submersion.
+- Maximum du bulletin d'aujourd'hui, pas nécessairement la vigilance maintenant. Des créneaux passés peuvent encore être affichés.
+- Horaires selon le fuseau Home Assistant, pas forcément celui du téléphone.
+- Pas de contrôle fiable de l'âge GPS. Une position disponible peut être ancienne.
+- Formats iOS non reconnus ignorés ; rendu icône/couleur Android dépend du système et n'est pas identique à iOS.
+- Pas de plages silencieuses, confirmations de lecture, annonce Google ni carte imposée automatiquement.
+- Sans garantie de disponibilité API, accès distant ou notification.
 
-## Désinstallation
+## Configuration fermée accidentellement
 
-1. Désactiver les envois automatiques et supprimer l'entrée dans Appareils et services.
-2. Supprimer l'intégration via HACS, ou retirer son dossier après arrêt approprié de Home Assistant.
-3. Redémarrer.
-4. Vérifier les éventuels capteurs orphelins dans le registre des entités.
-5. Le stockage de déduplication peut subsister dans .storage. Ne pas modifier .storage à chaud ; sa suppression ne doit être faite qu'avec sauvegarde et connaissance du fonctionnement de Home Assistant.
-6. Révoquer la clé au portail Météo-France si elle ne sert plus.
+Le formulaire affiche des avertissements et un récapitulatif. Il n'intercepte PAS le clic extérieur du frontend.
+Fermer avant validation abandonne les changements non enregistrés ; l'ancienne configuration enregistrée reste intacte.
+Un vrai dialogue de confirmation de fermeture demanderait un mécanisme frontend distinct : ce n'est pas implémenté ici.
